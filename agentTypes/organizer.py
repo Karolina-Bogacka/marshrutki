@@ -11,9 +11,11 @@ class Organizer(Agent):
     # periodically check the situation, probably
     def check_places(self):
         print("*****************")
-        #for v in self.vehicles:
-        #    print(traci.vehicle.getSubscriptionResults(v))
+        #for v in range(0, len(self.vehicles)):
+            #ic(traci.vehicle.getSubscriptionResults(self.vehicles[v]))
 
     def reply_back(self, message):
+        ic(self.vehicles)
         positions = [traci.vehicle.getSubscriptionResults(v) for v in self.vehicles]
-        return 'Received %s' % message[0]
+        #ic(positions)
+        return 'Received %s' % str(message[2])

@@ -18,5 +18,5 @@ class Passenger(Agent):
         self.log_info('Publisher replied with: "%s"' % message)
 
     def find_me_a_bus(self):
-        self.send('organizer', (self.target, 0),
+        self.send('organizer', [self.index, self.target, self.position],
                   handler=Passenger.process_reply)
