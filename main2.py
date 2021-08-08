@@ -46,6 +46,9 @@ def generateRoutes(num_routes):
             traci.route.add(route_id, route_stage.edges)
     return routes
 
+def readAndAssignRoutes(num_routes):
+    pass
+
 
 def simulate(pass_num, veh_num, org_num=1):
     ns = run_nameserver()
@@ -71,6 +74,8 @@ def simulate(pass_num, veh_num, org_num=1):
     # organizer.check_places()
     edges = traci.edge.getIDList()
     routes = traci.route.getIDList()
+    ic(routes)
+    ic(traci.route.getEdges('!0'))
 
     routes_generated = generateRoutes(20)
 
@@ -114,19 +119,20 @@ def simulate(pass_num, veh_num, org_num=1):
         person.add_request(random_route[1].edges[-1])
         passengers.append(person)
 
-    # vehicles = []
-    # for i in range(veh_num):
-    #    traci.vehicle.add(f"vehicle-{i}", f"route_{i}", "marshrutka", departPos="random", line="taxi")
-
     step = 0
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
         reservations = traci.person.getTaxiReservations()
-        ic(reservations[1])
+        ic(reservations)
         ic(traci.vehicle.getTaxiFleet(1))
-        if reservations[1].state == 1:
-            ic(reservations[1].id)
-            traci.vehicle.dispatchTaxi('vehicle-0', [reservations[1].id])
+        for i in range(len(reservations)):
+            if reservations[i].state == 1:
+                ic(reservations[i].fromEdge)
+                ic(reservations[i].toEdge)
+                ic(traci.vehicle.getRoute(f'vehicle-{i}'))
+                ic(traci.simulation.findRoute(traci.vehicle.getRoute(f'vehicle-{i}')[0],
+                                           reservations[i].fromEdge, vType='marshrutka'))
+                traci.vehicle.dispatchTaxi(f'vehicle-{i}', [reservations[i].id])
         step += 1
     traci.close(False)
     ns.shutdown()

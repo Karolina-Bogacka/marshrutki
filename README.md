@@ -29,3 +29,6 @@ use one connection and kind of update most agents based on what they would know 
   
 - I guess most of this stuff I can do now and add specification of what goes where later, for example move specific parts to organizers, and counting 
 lanes and edges at the beginning was planned anyways.
+  
+python randomTrips.py -n config-smaller-berlin/osm.net.xml --trip-attributes="departLane=\"best\" departSpeed=\"max\" departPos=\"random\"" --
+additional-file config-smaller-berlin/add.xml -o config-smaller-berlin/output-trips.xml -e 50 --validate
