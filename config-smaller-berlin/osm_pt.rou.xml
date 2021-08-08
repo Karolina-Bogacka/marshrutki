@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- generated on 2021-08-06 19:52:27.389279 by $Id: ptlines2flows.py v1_3_1+0313-ccb31df3eb jakob.erdmann@dlr.de 2019-09-02 13:26:32 +0200 $ UNKNOWN
+  options: 
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vType id="pt_bus" vClass="bus"/>
+    <vType id="pt_tram" vClass="tram"/>
+    <vType id="pt_train" vClass="rail"/>
+    <vType id="pt_subway" vClass="rail_urban"/>
+    <vType id="pt_light_rail" vClass="rail_urban"/>
+    <vType id="pt_monorail" vClass="rail"/>
+    <vType id="pt_trolleybus" vClass="bus"/>
+    <vType id="pt_aerialway" vClass="bus"/>
+    <vType id="pt_ferry" vClass="ship"/>
+    <vType id="marshrutka" vClass="taxi" personCapacity="8" color="1,0,0">
+        <param key="has.taxi.device" value="true"/>
+        <param key="has.rerouting.device" value="true"/>
+        <param key="device.taxi.idle-algorithm" value="randomCircling"/>
+        <param key="device.taxi.dispatch-algorithm" value="traci"/>
+    </vType>
+    <route id="pt_bus_265:0" edges="375311154#0 375311154#1 375311154#2 375311154#3 375311154#4 375311154#6 375311154#7 541763977#1" >
+        <stop busStop="3352479223" duration="30.00" until="59.0"/> <!-- Jerusalemer Straße -->
+    </route>
+    <route id="pt_train_S1:0" edges="459344272 459344270#1" >
+        <stop busStop="4946539237" duration="30.00" until="91.0"/> <!-- S Brandenburger Tor -->
+    </route>
+    <route id="pt_train_S1:1" edges="459344269" >
+        <stop busStop="322796388" duration="30.00" until="61.0"/> <!-- S Brandenburger Tor -->
+    </route>
+    <route id="pt_bus_200:1" edges="375311154#0 375311154#1 375311154#2 375311154#3 375311154#4 375311154#6 375311154#7 541763977#1" >
+        <stop busStop="3352479223" duration="30.00" until="58.0"/> <!-- Jerusalemer Straße -->
+    </route>
+    <route id="pt_bus_M48:0" edges="710761406#0 710761406#1" >
+        <stop busStop="6287386729" duration="30.00" until="50.0"/> <!-- U Mohrenstraße -->
+    </route>
+    <route id="pt_bus_200:0" edges="4611722#0 168515533#2 168515533#4 168515533#5 375312063#0 375312063#2 110786129#1" >
+        <stop busStop="3352479250" duration="30.00" until="63.0"/> <!-- U Spittelmarkt -->
+        <stop busStop="3352479224" duration="30.00" until="126.0"/> <!-- Jerusalemer Straße -->
+    </route>
+    <route id="pt_bus_M48:1" edges="710761406#1 197160273#1 335462921#1" >
+        <stop busStop="6287386729" duration="30.00" until="52.0"/> <!-- U Mohrenstraße -->
+    </route>
+    <route id="pt_bus_100:1" edges="24240246#0 24240246#2 24240246#3 236092221#0 236092221#1 236092221#2 236092221#3 342968607#1 461526152#0 340498982#0 340498982#2 340498982#3 340498982#4 340498982#5 340498982#8 340498982#9 354528932#0 354528932#1 251884680 339201217#0 339201217#1 15971196 54048862#0 54048862#1 54048862#3 831694400" >
+        <stop busStop="271388393" duration="30.00" until="37.0"/> <!-- S+U Brandenburger Tor -->
+        <stop busStop="3869306771" duration="30.00" until="150.0"/> <!-- U Unter den Linden -->
+        <stop busStop="3870475228" duration="30.00" until="212.0"/> <!-- Staatsoper -->
+        <stop busStop="3867910421" duration="30.00" until="295.0"/> <!-- U Museumsinsel -->
+    </route>
+    <route id="pt_bus_100:0" edges="339201219 541763974 61584187#1 61584187#2 61584187#3 61584187#4 54048863 15971197#0 15971197#1 4611699 751602168 169195795#0 169195795#1 169195795#4 169195795#5 169195795#6 169195795#7 169195795#9 882389494 340498988#0 188386313#1 188386313#2 24913304#1 24913304#2 24913304#3" >
+        <stop busStop="3867910420" duration="30.00" until="64.0"/> <!-- U Museumsinsel -->
+        <stop busStop="271296293" duration="30.00" until="155.0"/> <!-- Staatsoper -->
+        <stop busStop="272408975" duration="30.00" until="236.0"/> <!-- U Unter den Linden -->
+        <stop busStop="271373068" duration="30.00" until="313.0"/> <!-- S+U Brandenburger Tor -->
+    </route>
+    <route id="pt_bus_248:0" edges="4611722#0 42747981#2" >
+        <stop busStop="1361328318" duration="30.00" until="64.0"/> <!-- U Spittelmarkt -->
+    </route>
+    <route id="pt_train_S2:0" edges="459344272 459344270#1" >
+        <stop busStop="4946539237" duration="30.00" until="91.0"/> <!-- S Brandenburger Tor -->
+    </route>
+    <route id="pt_tram_12:0" edges="-22820560#3 -22820560#1 -22820560#0 93584121#1 144014237#0 144014237#1 144014237#2 144014228#0 144014228#1 144014228#2" >
+        <stop busStop="-247600965" duration="30.00" until="43.0"/> <!-- S+U Friedrichstraße -->
+        <stop busStop="3922258748" duration="30.00" until="158.0"/> <!-- Universitätsstraße -->
+        <stop busStop="2175753204" duration="30.00" until="412.0"/> <!-- Am Kupfergraben -->
+    </route>
+    <route id="pt_train_S2:1" edges="459344269" >
+        <stop busStop="322796388" duration="30.00" until="61.0"/> <!-- S Brandenburger Tor -->
+    </route>
+    <route id="pt_train_S25:0" edges="459344272 459344270#1" >
+        <stop busStop="4946539237" duration="30.00" until="125.0"/> <!-- S Brandenburger Tor -->
+    </route>
+    <route id="pt_subway_U5:0" edges="421618236 248099627 942849696 942849695" >
+        <stop busStop="7057285550" duration="30.00" until="38.0"/> <!-- U Brandenburger Tor -->
+        <stop busStop="8087330616" duration="30.00" until="111.0"/> <!-- U Unter den Linden -->
+        <stop busStop="7974955393" duration="30.00" until="205.0"/> <!-- U Museumsinsel -->
+    </route>
+    <route id="pt_train_S25:1" edges="459344269" >
+        <stop busStop="322796388" duration="30.00" until="61.0"/> <!-- S Brandenburger Tor -->
+    </route>
+    <route id="pt_subway_U6:1" edges="335043673#0 335043673#1 335043673#2 387125527 295255789 465637630" >
+        <stop busStop="8170769020" duration="30.00" until="62.0"/> <!-- U Unter den Linden -->
+        <stop busStop="2182805353" duration="30.00" until="128.0"/> <!-- U Stadtmitte -->
+    </route>
+    <route id="pt_subway_U6:0" edges="295255796 169724406 295250353#1 295250353#2 295376548" >
+        <stop busStop="3904484932" duration="30.00" until="31.0"/> <!-- U Kochstraße/Checkpoint Charlie -->
+        <stop busStop="4940781828" duration="30.00" until="94.0"/> <!-- U Stadtmitte -->
+        <stop busStop="8170794617" duration="30.00" until="156.0"/> <!-- U Unter den Linden -->
+    </route>
+    <route id="pt_tram_12:1" edges="144014228#2 167272512#0 167272512#1 -195411594#2 -195411594#1" >
+        <stop busStop="2175753204" duration="30.00" until="36.0"/> <!-- Am Kupfergraben -->
+        <stop busStop="1673526976" duration="30.00" until="384.0"/> <!-- Georgenstraße/Am Kupfergraben -->
+        <stop busStop="-1823298700" duration="30.00" until="503.0"/> <!-- S+U Friedrichstraße -->
+    </route>
+    <route id="pt_train_S2:2" edges="459344272 459344270#1" >
+        <stop busStop="4946539237" duration="30.00" until="134.0"/> <!-- S Brandenburger Tor -->
+    </route>
+    <route id="pt_subway_U5:1" edges="942849698 942849697 71326270 23439780 421618230" >
+        <stop busStop="8196661137" duration="30.00" until="46.0"/> <!-- U Rotes Rathaus -->
+        <stop busStop="7974928190" duration="30.00" until="142.0"/> <!-- U Museumsinsel -->
+        <stop busStop="8090274121" duration="30.00" until="232.0"/> <!-- U Unter den Linden -->
+        <stop busStop="253846340" duration="30.00" until="296.0"/> <!-- U Brandenburger Tor -->
+    </route>
+    <route id="pt_train_S2:3" edges="459344269" >
+        <stop busStop="322796388" duration="30.00" until="61.0"/> <!-- S Brandenburger Tor -->
+    </route>
+    <route id="pt_subway_U2:1" edges="11685868 387106271#0 199847307#0 -199847311#0 387106271#2 199847347#0 199847347#1 -391559413" >
+        <stop busStop="29495049" duration="30.00" until="67.0"/> <!-- U Potsdamer Platz -->
+        <stop busStop="29495047" duration="30.00" until="136.0"/> <!-- U Mohrenstraße -->
+        <stop busStop="524657889" duration="30.00" until="206.0"/> <!-- U Stadtmitte -->
+        <stop busStop="-29495041" duration="30.00" until="237.0"/> <!-- U Hausvogteiplatz -->
+    </route>
+    <route id="pt_tram_M1:0" edges="144014230#3 167272512#0 167272512#1 -195411594#2 -195411594#1" >
+        <stop busStop="247603398" duration="30.00" until="38.0"/> <!-- Am Kupfergraben -->
+        <stop busStop="1673526976" duration="30.00" until="397.0"/> <!-- Georgenstraße/Am Kupfergraben -->
+        <stop busStop="-1823298700" duration="30.00" until="516.0"/> <!-- S+U Friedrichstraße -->
+    </route>
+    <route id="pt_subway_U2:0" edges="391559412 207993050 387106270#0 387106270#1 387106270#2 387106269" >
+        <stop busStop="2098466936" duration="30.00" until="65.0"/> <!-- U Hausvogteiplatz -->
+        <stop busStop="2182805355" duration="30.00" until="96.0"/> <!-- U Stadtmitte -->
+        <stop busStop="2098622298" duration="30.00" until="183.0"/> <!-- U Mohrenstraße -->
+        <stop busStop="2098466340" duration="30.00" until="229.0"/> <!-- U Potsdamer Platz -->
+    </route>
+    <route id="pt_train_S26:1" edges="459344272 459344270#1" >
+        <stop busStop="4946539237" duration="30.00" until="103.0"/> <!-- S Brandenburger Tor -->
+    </route>
+    <route id="pt_bus_265:1" edges="4611722#0 168515533#2 168515533#4 168515533#5 375312063#0 375312063#2 110786129#1" >
+        <stop busStop="3352479250" duration="30.00" until="48.0"/> <!-- U Spittelmarkt -->
+        <stop busStop="3352479224" duration="30.00" until="124.0"/> <!-- Jerusalemer Straße -->
+    </route>
+    <route id="pt_train_S26:0" edges="459344269" >
+        <stop busStop="322796388" duration="30.00" until="61.0"/> <!-- S Brandenburger Tor -->
+    </route>
+    <route id="pt_bus_147:0" edges="465376240#0 195411604 11483007#0 -169999355#2 -194069450#2 -882389497 171423001#0 171423001#1 171423001#2 35557143#1 389101365#0 389101365#3 66071366#0 66071366#1 66071366#2 66071366#3 23755950#0 23755950#1 23755950#2 4611696#1 4611696#4 4611696#5 8008608 -120675240#4 -120675240#3 -120675240#2" >
+        <stop busStop="-3869306770" duration="30.00" until="88.0"/> <!-- U Unter den Linden -->
+        <stop busStop="3869306767" duration="30.00" until="146.0"/> <!-- Französische Straße -->
+        <stop busStop="3869306774" duration="30.00" until="236.0"/> <!-- Werderscher Markt -->
+    </route>
+    <route id="pt_bus_147:1" edges="120675240#0 120675240#3 120675240#4 -8008608 -4611696#5 -4611696#4 -4611696#3 -23755950#4 -23755950#1 -23755950#0 -66071366#4 -66071366#2 -66071366#1 -66071366#0 -389101365#4 -389101365#2 -35557143#4 196850609#0 196850609#1 196850609#2 882389497 194069450#0 169999355#0 -11483007#2 22972195#2 465376239" >
+        <stop busStop="-3869306773" duration="30.00" until="94.0"/> <!-- Werderscher Markt -->
+        <stop busStop="-5824647400" duration="30.00" until="187.0"/> <!-- Französische Straße -->
+        <stop busStop="3869306772" duration="30.00" until="281.0"/> <!-- U Unter den Linden -->
+    </route>
+    <route id="pt_tram_M1:3" edges="-22820560#3 -22820560#1 -22820560#0 93584121#1 144014237#0 144014237#1 144014237#2 144014233#0 144014233#2 144014233#4 144014230#0 144014230#1 144014230#2 144014230#3" >
+        <stop busStop="-247600965" duration="30.00" until="75.0"/> <!-- S+U Friedrichstraße -->
+        <stop busStop="3922258748" duration="30.00" until="202.0"/> <!-- Universitätsstraße -->
+        <stop busStop="247603398" duration="30.00" until="695.0"/> <!-- Am Kupfergraben -->
+    </route>
+    <route id="pt_tram_M1:2" edges="-22820560#3 -22820560#1 -22820560#0 93584121#1 144014237#0 144014237#1 144014237#2 144014233#0 144014233#2 144014233#4 144014230#0 144014230#1 144014230#2 144014230#3" >
+        <stop busStop="-247600965" duration="30.00" until="43.0"/> <!-- S+U Friedrichstraße -->
+        <stop busStop="3922258748" duration="30.00" until="136.0"/> <!-- Universitätsstraße -->
+        <stop busStop="247603398" duration="30.00" until="745.0"/> <!-- Am Kupfergraben -->
+    </route>
+    <route id="pt_tram_M1:1" edges="144014230#3 167272512#0 167272512#1 -195411594#2 -195411594#1" >
+        <stop busStop="247603398" duration="30.00" until="38.0"/> <!-- Am Kupfergraben -->
+        <stop busStop="1673526976" duration="30.00" until="386.0"/> <!-- Georgenstraße/Am Kupfergraben -->
+        <stop busStop="-1823298700" duration="30.00" until="487.0"/> <!-- S+U Friedrichstraße -->
+    </route>
+    <route id="pt_bus_300:0" edges="339201219 541763974 61584187#1 61584187#2 61584187#3 61584187#4 54048863 15971197#0 15971197#1 4611699 751602168 169195795#0 169195795#1 169195795#4 169195795#5 169195795#6 169195795#7 169195795#9 882389494 340498988#0 188386313#1 188386313#2 24913267#0 24913267#3 4402014#0 4402014#3 326116285#0 326116285#2 326116285#3 4401967#0 335462916 85255870#0 85255869#0 710761407#0 710761407#1 710761407#3 335462921#1" >
+        <stop busStop="3867910420" duration="30.00" until="61.0"/> <!-- U Museumsinsel -->
+        <stop busStop="271296293" duration="30.00" until="148.0"/> <!-- Staatsoper -->
+        <stop busStop="272408975" duration="30.00" until="225.0"/> <!-- U Unter den Linden -->
+        <stop busStop="3862767501" duration="30.00" until="351.0"/> <!-- Behrenstraße/Wilhelmstraße -->
+        <stop busStop="272441720" duration="30.00" until="458.0"/> <!-- U Mohrenstraße -->
+    </route>
+    <route id="pt_bus_300:1" edges="-335462921#4 -710761407#4 -710761407#2 -710761407#0 -85255869#2 -85255870#2 -335462916 -4401967#2 -335462874#2 -326116285#2 -326116285#1 -4402014#3 -4402014#2 -326116286#2 -24913267#2 342968607#1 461526152#0 340498982#0 340498982#2 340498982#3 340498982#4 340498982#5 340498982#8 340498982#9 354528932#0 354528932#1 251884680 339201217#0 339201217#1 15971196 54048862#0 54048862#1 54048862#3 831694400" >
+        <stop busStop="-272441719" duration="30.00" until="55.0"/> <!-- U Mohrenstraße -->
+        <stop busStop="-4692172068" duration="30.00" until="149.0"/> <!-- Behrenstraße/Wilhelmstraße -->
+        <stop busStop="3869306771" duration="30.00" until="302.0"/> <!-- U Unter den Linden -->
+        <stop busStop="3870475228" duration="30.00" until="365.0"/> <!-- Staatsoper -->
+        <stop busStop="3867910421" duration="30.00" until="466.0"/> <!-- U Museumsinsel -->
+    </route>
+    <flow id="pt_bus_265:0" type="pt_bus" route="pt_bus_265:0" begin="3.0" end="3603.0" period="600" line="265:0" >
+        <param key="name" value="Bus 265: U Stadtmitte =&gt; Mitte, Fischerinsel"/>
+        <param key="completeness" value="0.25"/>
+    </flow>
+    <flow id="pt_train_S1:0" type="pt_train" route="pt_train_S1:0" begin="17.0" end="3617.0" period="600" line="S1:0" >
+        <param key="name" value="S1: S Oranienburg =&gt; S Wannsee"/>
+        <param key="completeness" value="0.03"/>
+    </flow>
+    <flow id="pt_train_S1:1" type="pt_train" route="pt_train_S1:1" begin="27.0" end="3627.0" period="600" line="S1:1" >
+        <param key="name" value="S1: S Wannsee =&gt; S Oranienburg"/>
+        <param key="completeness" value="0.03"/>
+    </flow>
+    <flow id="pt_bus_200:1" type="pt_bus" route="pt_bus_200:1" begin="55.0" end="3655.0" period="600" line="200:1" >
+        <param key="name" value="Bus 200: S+U Zoologischer Garten =&gt; Prenzlauer Berg, Michelangelostraße"/>
+        <param key="completeness" value="0.04"/>
+    </flow>
+    <flow id="pt_bus_M48:0" type="pt_bus" route="pt_bus_M48:0" begin="165.0" end="3765.0" period="600" line="M48:0" >
+        <param key="name" value="Buslinie M48: Busseallee =&gt; U Mohrenstraße"/>
+        <param key="completeness" value="0.03"/>
+    </flow>
+    <flow id="pt_bus_200:0" type="pt_bus" route="pt_bus_200:0" begin="52.0" end="3652.0" period="600" line="200:0" >
+        <param key="name" value="Bus 200: Prenzlauer Berg, Michelangelostraße =&gt; S+U Zoologischer Garten"/>
+        <param key="completeness" value="0.08"/>
+    </flow>
+    <flow id="pt_bus_M48:1" type="pt_bus" route="pt_bus_M48:1" begin="201.0" end="3801.0" period="600" line="M48:1" >
+        <param key="name" value="Buslinie M48: U Mohrenstraße =&gt; Busseallee"/>
+        <param key="completeness" value="0.03"/>
+    </flow>
+    <flow id="pt_bus_100:1" type="pt_bus" route="pt_bus_100:1" begin="15.0" end="3615.0" period="600" line="100:1" >
+        <param key="name" value="Bus 100: S+U Zoologischer Garten =&gt; S+U Alexanderplatz"/>
+        <param key="completeness" value="0.22"/>
+    </flow>
+    <flow id="pt_bus_100:0" type="pt_bus" route="pt_bus_100:0" begin="15.0" end="3615.0" period="600" line="100:0" >
+        <param key="name" value="Bus 100: S+U Alexanderplatz =&gt; S+U Zoologischer Garten"/>
+        <param key="completeness" value="0.24"/>
+    </flow>
+    <flow id="pt_bus_248:0" type="pt_bus" route="pt_bus_248:0" begin="321.0" end="3921.0" period="600" line="248:0" >
+        <param key="name" value="Bus 248: S+U Alexanderplatz =&gt; S Südkreuz =&gt; U Breitenbachplatz"/>
+        <param key="completeness" value="0.03"/>
+    </flow>
+    <flow id="pt_train_S2:0" type="pt_train" route="pt_train_S2:0" begin="346.0" end="3946.0" period="1200" line="S2:0" >
+        <param key="name" value="S2: S Bernau =&gt; S Blankenfelde"/>
+        <param key="completeness" value="0.04"/>
+    </flow>
+    <flow id="pt_tram_12:0" type="pt_tram" route="pt_tram_12:0" begin="58.0" end="3658.0" period="600" line="12:0" >
+        <param key="name" value="Tram 12: Weißensee, Pasedagplatz =&gt; Mitte, Am Kupfergraben"/>
+        <param key="completeness" value="0.12"/>
+    </flow>
+    <flow id="pt_train_S2:1" type="pt_train" route="pt_train_S2:1" begin="353.0" end="3953.0" period="1200" line="S2:1" >
+        <param key="name" value="S2: S Blankenfelde =&gt; S Bernau"/>
+        <param key="completeness" value="0.04"/>
+    </flow>
+    <flow id="pt_train_S25:0" type="pt_train" route="pt_train_S25:0" begin="379.0" end="3979.0" period="600" line="S25:0" >
+        <param key="name" value="S25: S Hennigsdorf =&gt; S Teltow Stadt"/>
+        <param key="completeness" value="0.04"/>
+    </flow>
+    <flow id="pt_subway_U5:0" type="pt_subway" route="pt_subway_U5:0" begin="326.0" end="3926.0" period="300" line="U5:0" >
+        <param key="name" value="U5: U Hauptbahnhof =&gt; U Hönow"/>
+        <param key="completeness" value="0.12"/>
+    </flow>
+    <flow id="pt_train_S25:1" type="pt_train" route="pt_train_S25:1" begin="431.0" end="4031.0" period="600" line="S25:1" >
+        <param key="name" value="S25: S Teltow Stadt =&gt; S Hennigsdorf"/>
+        <param key="completeness" value="0.04"/>
+    </flow>
+    <flow id="pt_subway_U6:1" type="pt_subway" route="pt_subway_U6:1" begin="418.0" end="4018.0" period="300" line="U6:1" >
+        <param key="name" value="U6: U Alt-Tegel =&gt; U Alt-Mariendorf"/>
+        <param key="completeness" value="0.07"/>
+    </flow>
+    <flow id="pt_subway_U6:0" type="pt_subway" route="pt_subway_U6:0" begin="406.0" end="4006.0" period="300" line="U6:0" >
+        <param key="name" value="U6: U Alt-Mariendorf =&gt; U Alt-Tegel"/>
+        <param key="completeness" value="0.10"/>
+    </flow>
+    <flow id="pt_tram_12:1" type="pt_tram" route="pt_tram_12:1" begin="93.0" end="3693.0" period="600" line="12:1" >
+        <param key="name" value="Tram 12: Mitte, Am Kupfergraben =&gt; Weißensee, Pasedagplatz"/>
+        <param key="completeness" value="0.12"/>
+    </flow>
+    <flow id="pt_train_S2:2" type="pt_train" route="pt_train_S2:2" begin="437.0" end="4037.0" period="1200" line="S2:2" >
+        <param key="name" value="S2: S Buch =&gt; S Lichtenrade"/>
+        <param key="completeness" value="0.05"/>
+    </flow>
+    <flow id="pt_subway_U5:1" type="pt_subway" route="pt_subway_U5:1" begin="331.0" end="3931.0" period="300" line="U5:1" >
+        <param key="name" value="U5: U Hönow =&gt; U Hauptbahnhof"/>
+        <param key="completeness" value="0.15"/>
+    </flow>
+    <flow id="pt_train_S2:3" type="pt_train" route="pt_train_S2:3" begin="509.0" end="4109.0" period="1200" line="S2:3" >
+        <param key="name" value="S2: S Lichtenrade =&gt; S Bernau"/>
+        <param key="completeness" value="0.04"/>
+    </flow>
+    <flow id="pt_subway_U2:1" type="pt_subway" route="pt_subway_U2:1" begin="389.0" end="3989.0" period="240" line="U2:1" >
+        <param key="name" value="U2: U Ruhleben =&gt; S+U Pankow"/>
+        <param key="completeness" value="0.14"/>
+    </flow>
+    <flow id="pt_tram_M1:0" type="pt_tram" route="pt_tram_M1:0" begin="119.0" end="3719.0" period="1200" line="M1:0" >
+        <param key="name" value="Tram M1: Mitte, Am Kupfergraben =&gt; Niederschönhausen, Schillerstraße"/>
+        <param key="completeness" value="0.10"/>
+    </flow>
+    <flow id="pt_subway_U2:0" type="pt_subway" route="pt_subway_U2:0" begin="383.0" end="3983.0" period="240" line="U2:0" >
+        <param key="name" value="U2: S+U Pankow =&gt; U Ruhleben"/>
+        <param key="completeness" value="0.14"/>
+    </flow>
+    <flow id="pt_train_S26:1" type="pt_train" route="pt_train_S26:1" begin="535.0" end="4135.0" period="600" line="S26:1" >
+        <param key="name" value="S26: S Waidmannslust =&gt; S Teltow Stadt"/>
+        <param key="completeness" value="0.04"/>
+    </flow>
+    <flow id="pt_bus_265:1" type="pt_bus" route="pt_bus_265:1" begin="508.0" end="4108.0" period="600" line="265:1" >
+        <param key="name" value="Bus 265: Mitte, Fischerinsel =&gt; U Stadtmitte"/>
+        <param key="completeness" value="0.40"/>
+    </flow>
+    <flow id="pt_train_S26:0" type="pt_train" route="pt_train_S26:0" begin="587.0" end="4187.0" period="600" line="S26:0" >
+        <param key="name" value="S26: S Teltow Stadt =&gt; S Waidmannslust"/>
+        <param key="completeness" value="0.04"/>
+    </flow>
+    <flow id="pt_bus_147:0" type="pt_bus" route="pt_bus_147:0" begin="485.0" end="4085.0" period="600" line="147:0" >
+        <param key="name" value="Bus 147: U Leopoldplatz =&gt; Mitte, Fischerinsel"/>
+        <param key="completeness" value="0.15"/>
+    </flow>
+    <flow id="pt_bus_147:1" type="pt_bus" route="pt_bus_147:1" begin="497.0" end="4097.0" period="600" line="147:1" >
+        <param key="name" value="Bus 147: Mitte, Fischerinsel =&gt; U Leopoldplatz"/>
+        <param key="completeness" value="0.15"/>
+    </flow>
+    <flow id="pt_tram_M1:3" type="pt_tram" route="pt_tram_M1:3" begin="139.0" end="3739.0" period="1200" line="M1:3" >
+        <param key="name" value="Tram M1: Rosenthal Nord =&gt; Mitte, Am Kupfergraben"/>
+        <param key="completeness" value="0.10"/>
+    </flow>
+    <flow id="pt_tram_M1:2" type="pt_tram" route="pt_tram_M1:2" begin="132.0" end="3732.0" period="1200" line="M1:2" >
+        <param key="name" value="Tram M1: Niederschönhausen, Schillerstraße =&gt; Mitte, Am Kupfergraben"/>
+        <param key="completeness" value="0.10"/>
+    </flow>
+    <flow id="pt_tram_M1:1" type="pt_tram" route="pt_tram_M1:1" begin="457.0" end="4057.0" period="1200" line="M1:1" >
+        <param key="name" value="Tram M1: Mitte, Am Kupfergraben =&gt; Rosenthal Nord"/>
+        <param key="completeness" value="0.10"/>
+    </flow>
+    <flow id="pt_bus_300:0" type="pt_bus" route="pt_bus_300:0" begin="574.0" end="4174.0" period="600" line="300:0" >
+        <param key="name" value="Bus 300: S+U Warschauer Straße =&gt; Tiergarten, Philharmonie Süd"/>
+        <param key="completeness" value="0.25"/>
+    </flow>
+    <flow id="pt_bus_300:1" type="pt_bus" route="pt_bus_300:1" begin="583.0" end="4183.0" period="600" line="300:1" >
+        <param key="name" value="Bus 300: Tiergarten, Philharmonie Süd =&gt; S+U Warschauer Straße"/>
+        <param key="completeness" value="0.23"/>
+    </flow>
+</routes>

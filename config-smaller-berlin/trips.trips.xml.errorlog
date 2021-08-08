@@ -1,0 +1,23 @@
+Warning: At actuated tlLogic 'cluster_21487242_2264199819_6583929458_6583929463_8507892381', linkIndex 17 has no controlling detector.
+Warning: At actuated tlLogic 'cluster_21487242_2264199819_6583929458_6583929463_8507892381', linkIndex 18 has no controlling detector.
+Warning: At actuated tlLogic 'cluster_21487242_2264199819_6583929458_6583929463_8507892381', linkIndex 19 has no controlling detector.
+Warning: At actuated tlLogic 'joinedS_0', linkIndex 0 has no controlling detector.
+Warning: busStop '2175753204' on lane '144014228#2_0' is too short for vehicle '7_tram_12:0'.
+Warning: busStop '247603398' on lane '144014230#3_0' is too short for vehicle '9_tram_M1:0'.
+Warning: No connection between edge '144014228#2' and edge '167272512#0' found.
+Warning: Vehicle '8_tram_12:1' has no valid route from edge '144014228#2' to stop edge '167272512#0'.
+Warning: No connection between edge '144014230#3' and edge '167272512#0' found.
+Warning: Vehicle '9_tram_M1:0' has no valid route from edge '144014230#3' to stop edge '167272512#0'.
+Warning: No connection between edge '144014230#3' and edge '167272512#0' found.
+Warning: Vehicle '10_tram_M1:1' has no valid route from edge '144014230#3' to stop edge '167272512#0'.
+Warning: busStop '3869306774' on lane '23755950#0_1' is too short for vehicle '35_bus_147:0'.
+Warning: Teleporting vehicle '8_tram_12:1'; waited too long (wrong lane), lane='144014228#2_0', time=429.00.
+Warning: Vehicle '8_tram_12:1' ends teleporting on edge '167272512#0', time 429.00.
+Warning: Teleporting vehicle '9_tram_M1:0'; waited too long (wrong lane), lane='144014230#3_0', time=457.00.
+Warning: Vehicle '9_tram_M1:0' ends teleporting on edge '167272512#0', time 457.00.
+Warning: Teleporting vehicle '12_tram_M1:3'; waited too long (jam), lane='144014233#2_0', time=768.00.
+Warning: Teleporting vehicle '11_tram_M1:2'; waited too long (jam), lane='144014233#4_0', time=768.00.
+Warning: Vehicle '11_tram_M1:2' ends teleporting on edge '144014230#0', time 768.00.
+Warning: Vehicle '12_tram_M1:3' ends teleporting on edge '144014230#2', time 780.00.
+Warning: Teleporting vehicle '10_tram_M1:1'; waited too long (wrong lane), lane='144014230#3_0', time=795.00.
+Warning: Vehicle '10_tram_M1:1' ends teleporting on edge '167272512#0', time 795.00.

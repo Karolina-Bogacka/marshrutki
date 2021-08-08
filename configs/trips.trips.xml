@@ -3,9 +3,16 @@
   options: -n configs/osm.net.xml -e 50 <doubleminus>fringe-factor 10
 -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vType id="veh_passenger" vClass="passenger"/>
+    <vType id="marshrutka" vClass="taxi" personCapacity="8" color="1,0,0">
+        <!--<param key="has.marshrutka.device" value="true"/>-->
+        <param key="has.taxi.device" value="true"/>
+        <param key="device.taxi.idle-algorithm" value="randomCircling"/>
+        <param key="device.taxi.dispatch-algorithm" value="greedyShared"/>
+    </vType>
     <trip id="0" depart="0.00" from="423805162#0" to="-148706459#3"/>
     <trip id="1" depart="1.00" from="-8114526#2" to="-900170252"/>
-    <trip id="2" depart="2.00" from="4902312#4" to="401830534#1"/>
+    <trip id="2" depart="1.00" from="4902312#4" to="401830534#1"/>
     <trip id="3" depart="3.00" from="5477511" to="-22920748#0"/>
     <trip id="4" depart="4.00" from="191552159" to="-169969776#0"/>
     <trip id="5" depart="5.00" from="-4949552#1" to="205343991#0"/>

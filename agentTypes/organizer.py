@@ -8,9 +8,17 @@ class Organizer(Agent):
     def on_init(self):
         ic("on init")
 
-    # periodically check the situation, probably
+    def connect_traci(self):
+        self.connection = traci.connect(port=self.port, numRetries=10)
+        self.connection.setOrder(2)
+
+    def step_simulation(self):
+        traci.simulationStep()
+
+        # periodically check the situation, probably
     def check_places(self):
         print("*****************")
+        ic(traci.vehicle.getIDList())
         #for v in range(0, len(self.vehicles)):
             #ic(traci.vehicle.getSubscriptionResults(self.vehicles[v]))
 

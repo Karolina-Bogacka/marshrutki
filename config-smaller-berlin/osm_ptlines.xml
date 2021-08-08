@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on Fri Aug  6 19:52:24 2021 by Eclipse SUMO netconvert Version 1.9.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <type-files value="/usr/local/opt/sumo/share/sumo/data/typemap/osmNetconvert.typ.xml,/usr/local/opt/sumo/share/sumo/data/typemap/osmNetconvertUrbanDe.typ.xml,/usr/local/opt/sumo/share/sumo/data/typemap/osmNetconvertPedestrians.typ.xml"/>
+        <osm-files value="osm_bbox.osm.xml"/>
+    </input>
+
+    <output>
+        <output-file value="osm.net.xml"/>
+        <output.street-names value="true"/>
+        <output.original-names value="true"/>
+        <ptstop-output value="osm_stops.add.xml"/>
+        <ptline-output value="osm_ptlines.xml"/>
+    </output>
+
+    <projection>
+        <proj.utm value="true"/>
+    </projection>
+
+    <processing>
+        <geometry.remove value="true"/>
+        <roundabouts.guess value="true"/>
+    </processing>
+
+    <tls_building>
+        <tls.discard-simple value="true"/>
+        <tls.join value="true"/>
+        <tls.guess-signals value="true"/>
+        <tls.default-type value="actuated"/>
+    </tls_building>
+
+    <ramp_guessing>
+        <ramps.guess value="true"/>
+    </ramp_guessing>
+
+    <junctions>
+        <junctions.join value="true"/>
+        <junctions.corner-detail value="5"/>
+    </junctions>
+
+    <pedestrian>
+        <crossings.guess value="true"/>
+    </pedestrian>
+
+    <railway>
+        <railway.topology.repair value="true"/>
+        <railway.topology.repair.stop-turn value="true"/>
+    </railway>
+
+    <report>
+        <verbose value="true"/>
+        <aggregate-warnings value="5"/>
+    </report>
+
+</configuration>
+-->
+
+<ptLines xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/ptlines_file.xsd">
+    <ptLine id="114255" name="Bus 265: U Stadtmitte =&gt; Mitte, Fischerinsel" line="265" type="bus" vClass="bus" completeness="0.25">
+        <route edges="375311154#0 375311154#1 375311154#2 375311154#3 375311154#4 375311154#6 375311154#7 541763977#1"/>
+        <busStop id="3352479223" name="Jerusalemer Straße"/>
+    </ptLine>
+    <ptLine id="1900690" name="Bus 100: S+U Alexanderplatz =&gt; S+U Zoologischer Garten" line="100" type="bus" vClass="bus" completeness="0.24">
+        <route edges="339201219 541763974 61584187#1 61584187#2 61584187#3 61584187#4 54048863 15971197#0 15971197#1 4611699 751602168 169195795#0 169195795#1 169195795#4 169195795#5 169195795#6 169195795#7 169195795#9 882389494 340498988#0 188386313#1 188386313#2 24913304#1 24913304#2 24913304#3"/>
+        <busStop id="3867910420" name="U Museumsinsel"/>
+        <busStop id="271296293" name="Staatsoper"/>
+        <busStop id="272408975" name="U Unter den Linden"/>
+        <busStop id="271373068" name="S+U Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="1900691" name="Bus 100: S+U Zoologischer Garten =&gt; S+U Alexanderplatz" line="100" type="bus" vClass="bus" completeness="0.22">
+        <route edges="24240246#0 24240246#2 24240246#3 236092221#0 236092221#1 236092221#2 236092221#3 342968607#1 461526152#0 340498982#0 340498982#2 340498982#3 340498982#4 340498982#5 340498982#8 340498982#9 354528932#0 354528932#1 251884680 339201217#0 339201217#1 15971196 54048862#0 54048862#1 54048862#3 831694400"/>
+        <busStop id="271388393" name="S+U Brandenburger Tor"/>
+        <busStop id="3869306771" name="U Unter den Linden"/>
+        <busStop id="3870475228" name="Staatsoper"/>
+        <busStop id="3867910421" name="U Museumsinsel"/>
+    </ptLine>
+    <ptLine id="1929070" name="S1: S Oranienburg =&gt; S Wannsee" line="S1" type="train" vClass="rail" period="600" completeness="0.03">
+        <route edges="459344272 459344270#1"/>
+        <busStop id="4946539237" name="S Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="1929071" name="S1: S Wannsee =&gt; S Oranienburg" line="S1" type="train" vClass="rail" period="600" completeness="0.03">
+        <route edges="459344269"/>
+        <busStop id="322796388" name="S Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="1986097" name="Bus 200: Prenzlauer Berg, Michelangelostraße =&gt; S+U Zoologischer Garten" line="200" type="bus" vClass="bus" completeness="0.08">
+        <route edges="4611722#0 168515533#2 168515533#4 168515533#5 375312063#0 375312063#2 110786129#1"/>
+        <busStop id="3352479250" name="U Spittelmarkt"/>
+        <busStop id="3352479224" name="Jerusalemer Straße"/>
+    </ptLine>
+    <ptLine id="1986098" name="Bus 200: S+U Zoologischer Garten =&gt; Prenzlauer Berg, Michelangelostraße" line="200" type="bus" vClass="bus" completeness="0.04">
+        <route edges="375311154#0 375311154#1 375311154#2 375311154#3 375311154#4 375311154#6 375311154#7 541763977#1"/>
+        <busStop id="3352479223" name="Jerusalemer Straße"/>
+    </ptLine>
+    <ptLine id="2014286" name="Tram 12: Weißensee, Pasedagplatz =&gt; Mitte, Am Kupfergraben" line="12" type="tram" vClass="tram" period="600" completeness="0.12">
+        <route edges="-22820560#3 -22820560#1 -22820560#0 93584121#1 144014237#0 144014237#1 144014237#2 144014228#0 144014228#1 144014228#2"/>
+        <busStop id="-247600965" name="S+U Friedrichstraße"/>
+        <busStop id="3922258748" name="Universitätsstraße"/>
+        <busStop id="2175753204" name="Am Kupfergraben"/>
+    </ptLine>
+    <ptLine id="2014287" name="Tram 12: Mitte, Am Kupfergraben =&gt; Weißensee, Pasedagplatz" line="12" type="tram" vClass="tram" period="600" completeness="0.12">
+        <route edges="167272512#0 167272512#1 -195411594#2 -195411594#1"/>
+        <busStop id="2175753204" name="Am Kupfergraben"/>
+        <busStop id="1673526976" name="Georgenstraße/Am Kupfergraben"/>
+        <busStop id="-1823298700" name="S+U Friedrichstraße"/>
+    </ptLine>
+    <ptLine id="2076228" name="Tram M1: Mitte, Am Kupfergraben =&gt; Niederschönhausen, Schillerstraße" line="M1" type="tram" vClass="tram" period="1200" completeness="0.10">
+        <route edges="167272512#0 167272512#1 -195411594#2 -195411594#1"/>
+        <busStop id="247603398" name="Am Kupfergraben"/>
+        <busStop id="1673526976" name="Georgenstraße/Am Kupfergraben"/>
+        <busStop id="-1823298700" name="S+U Friedrichstraße"/>
+    </ptLine>
+    <ptLine id="2076230" name="Tram M1: Mitte, Am Kupfergraben =&gt; Rosenthal Nord" line="M1" type="tram" vClass="tram" period="1200" completeness="0.10">
+        <route edges="167272512#0 167272512#1 -195411594#2 -195411594#1"/>
+        <busStop id="247603398" name="Am Kupfergraben"/>
+        <busStop id="1673526976" name="Georgenstraße/Am Kupfergraben"/>
+        <busStop id="-1823298700" name="S+U Friedrichstraße"/>
+    </ptLine>
+    <ptLine id="2076231" name="Tram M1: Niederschönhausen, Schillerstraße =&gt; Mitte, Am Kupfergraben" line="M1" type="tram" vClass="tram" period="1200" completeness="0.10">
+        <route edges="-22820560#3 -22820560#1 -22820560#0 93584121#1 144014237#0 144014237#1 144014237#2 144014233#0 144014233#2 144014233#4 144014230#0 144014230#1 144014230#2 144014230#3"/>
+        <busStop id="-247600965" name="S+U Friedrichstraße"/>
+        <busStop id="3922258748" name="Universitätsstraße"/>
+        <busStop id="247603398" name="Am Kupfergraben"/>
+    </ptLine>
+    <ptLine id="2076232" name="Tram M1: Rosenthal Nord =&gt; Mitte, Am Kupfergraben" line="M1" type="tram" vClass="tram" period="1200" completeness="0.10">
+        <route edges="-22820560#3 -22820560#1 -22820560#0 93584121#1 144014237#0 144014237#1 144014237#2 144014233#0 144014233#2 144014233#4 144014230#0 144014230#1 144014230#2 144014230#3"/>
+        <busStop id="-247600965" name="S+U Friedrichstraße"/>
+        <busStop id="3922258748" name="Universitätsstraße"/>
+        <busStop id="247603398" name="Am Kupfergraben"/>
+    </ptLine>
+    <ptLine id="2084828" name="Buslinie M48: Busseallee =&gt; U Mohrenstraße" line="M48" type="bus" vClass="bus" completeness="0.03">
+        <route edges="710761406#0 710761406#1"/>
+        <busStop id="6287386729" name="U Mohrenstraße"/>
+    </ptLine>
+    <ptLine id="2084829" name="Buslinie M48: U Mohrenstraße =&gt; Busseallee" line="M48" type="bus" vClass="bus" completeness="0.03">
+        <route edges="710761406#1 197160273#1 335462921#1"/>
+        <busStop id="6287386729" name="U Mohrenstraße"/>
+    </ptLine>
+    <ptLine id="2202086" name="Bus N6: U Alt-Tegel =&gt; U Alt-Mariendorf" line="N6" type="bus" vClass="bus" nightService="only" completeness="0.04">
+        <route edges="465376240#0 195411604 11483007#0 -169999355#2 -194069450#2 -882389497 171423001#0 171423001#1 171423001#2 35557143#1 22972473#0 22972473#3 22972473#4 22972473#5 22972470#1 22972470#2 22972470#3 884209962#0"/>
+        <busStop id="-3869306770" name="U Unter den Linden"/>
+        <busStop id="3869306767" name="Französische Straße"/>
+    </ptLine>
+    <ptLine id="2206192" name="Bus N2: S+U Pankow =&gt; U Ruhleben" line="N2" type="bus" vClass="bus" nightService="only" completeness="0.04">
+        <route edges="4611722#0 168515533#2 168515533#4 168515533#5 375312063#0 375312063#2 110786129#1"/>
+        <busStop id="3352479250" name="U Spittelmarkt"/>
+        <busStop id="3352479224" name="Jerusalemer Straße"/>
+    </ptLine>
+    <ptLine id="2211984" name="Bus N5: Hellersdorf, Riesaer Straße =&gt; S+U Hauptbahnhof" line="N5" type="bus" vClass="bus" period="1800" nightService="only" completeness="0.09">
+        <route edges="339201219 541763974 61584187#1 61584187#2 61584187#3 61584187#4 54048863 15971197#0 15971197#1 4611699 751602168 169195795#0 169195795#1 169195795#4 169195795#5 169195795#6 169195795#7 169195795#9 882389494 340498988#0 188386313#1 188386313#2 24913304#1 24913304#2 24913304#3"/>
+        <busStop id="3867910420" name="U Museumsinsel"/>
+        <busStop id="271296293" name="Staatsoper"/>
+        <busStop id="272408975" name="U Unter den Linden"/>
+        <busStop id="271373068" name="S+U Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="2211985" name="Bus N5: S+U Hauptbahnhof =&gt; Hellersdorf, Riesaer Straße" line="N5" type="bus" vClass="bus" period="1800" nightService="only" completeness="0.09">
+        <route edges="24240246#0 24240246#2 24240246#3 236092221#0 236092221#1 236092221#2 236092221#3 342968607#1 461526152#0 340498982#0 340498982#2 340498982#3 340498982#4 340498982#5 340498982#8 340498982#9 354528932#0 354528932#1 251884680 339201217#0 339201217#1 15971196 54048862#0 54048862#1 54048862#3 831694400"/>
+        <busStop id="271388393" name="S+U Brandenburger Tor"/>
+        <busStop id="3869306771" name="U Unter den Linden"/>
+        <busStop id="3870475228" name="Staatsoper"/>
+        <busStop id="3867910421" name="U Museumsinsel"/>
+    </ptLine>
+    <ptLine id="2227016" name="Bus 248: S+U Alexanderplatz =&gt; S Südkreuz =&gt; U Breitenbachplatz" line="248" type="bus" vClass="bus" completeness="0.03">
+        <route edges="4611722#0 42747981#2"/>
+        <busStop id="1361328318" name="U Spittelmarkt"/>
+    </ptLine>
+    <ptLine id="2227743" name="U5: U Hauptbahnhof =&gt; U Hönow" line="U5" type="subway" vClass="rail_urban" period="300" completeness="0.12">
+        <route edges="421618236 248099627 942849696 942849695"/>
+        <busStop id="7057285550" name="U Brandenburger Tor"/>
+        <busStop id="8087330616" name="U Unter den Linden"/>
+        <busStop id="7974955393" name="U Museumsinsel"/>
+    </ptLine>
+    <ptLine id="2227744" name="U5: U Hönow =&gt; U Hauptbahnhof" line="U5" type="subway" vClass="rail_urban" period="300" completeness="0.15">
+        <route edges="942849698 942849697 71326270 23439780 421618230"/>
+        <busStop id="8196661137" name="U Rotes Rathaus"/>
+        <busStop id="7974928190" name="U Museumsinsel"/>
+        <busStop id="8090274121" name="U Unter den Linden"/>
+        <busStop id="253846340" name="U Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="2269237" name="S2: S Bernau =&gt; S Blankenfelde" line="S2" type="train" vClass="rail" period="1200" completeness="0.04">
+        <route edges="459344272 459344270#1"/>
+        <busStop id="4946539237" name="S Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="2269238" name="S2: S Blankenfelde =&gt; S Bernau" line="S2" type="train" vClass="rail" period="1200" completeness="0.04">
+        <route edges="459344269"/>
+        <busStop id="322796388" name="S Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="2422950" name="S25: S Hennigsdorf =&gt; S Teltow Stadt" line="S25" type="train" vClass="rail" period="600" completeness="0.04">
+        <route edges="459344272 459344270#1"/>
+        <busStop id="4946539237" name="S Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="2422951" name="S25: S Teltow Stadt =&gt; S Hennigsdorf" line="S25" type="train" vClass="rail" period="600" completeness="0.04">
+        <route edges="459344269"/>
+        <busStop id="322796388" name="S Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="2669183" name="U2: S+U Pankow =&gt; U Ruhleben" line="U2" type="subway" vClass="rail_urban" period="240" completeness="0.14">
+        <route edges="391559412 207993050 387106270#0 387106270#1 387106270#2 387106269"/>
+        <busStop id="2098466936" name="U Hausvogteiplatz"/>
+        <busStop id="2182805355" name="U Stadtmitte"/>
+        <busStop id="2098622298" name="U Mohrenstraße"/>
+        <busStop id="2098466340" name="U Potsdamer Platz"/>
+    </ptLine>
+    <ptLine id="2669184" name="U2: U Ruhleben =&gt; S+U Pankow" line="U2" type="subway" vClass="rail_urban" period="240" completeness="0.14">
+        <route edges="11685868 387106271#0 387106271#1 387106271#2 199847347#0 199847347#1"/>
+        <busStop id="29495049" name="U Potsdamer Platz"/>
+        <busStop id="29495047" name="U Mohrenstraße"/>
+        <busStop id="524657889" name="U Stadtmitte"/>
+        <busStop id="-29495041" name="U Hausvogteiplatz"/>
+    </ptLine>
+    <ptLine id="2679163" name="U6: U Alt-Mariendorf =&gt; U Alt-Tegel" line="U6" type="subway" vClass="rail_urban" period="300" completeness="0.10">
+        <route edges="295255796 169724406 295250353#1 295250353#2 295376548"/>
+        <busStop id="3904484932" name="U Kochstraße/Checkpoint Charlie"/>
+        <busStop id="4940781828" name="U Stadtmitte"/>
+        <busStop id="8170794617" name="U Unter den Linden"/>
+    </ptLine>
+    <ptLine id="2679164" name="U6: U Alt-Tegel =&gt; U Alt-Mariendorf" line="U6" type="subway" vClass="rail_urban" period="300" completeness="0.07">
+        <route edges="335043673#0 335043673#1 335043673#2 387125527 295255789 465637630"/>
+        <busStop id="8170769020" name="U Unter den Linden"/>
+        <busStop id="2182805353" name="U Stadtmitte"/>
+    </ptLine>
+    <ptLine id="28286" name="Bus N2: U Ruhleben =&gt; S+U Pankow" line="N2" type="bus" vClass="bus" nightService="only" completeness="0.02">
+        <route edges="375311154#0 375311154#1 375311154#2 375311154#3 375311154#4 375311154#6 375311154#7 541763977#1"/>
+        <busStop id="3352479223" name="Jerusalemer Straße"/>
+    </ptLine>
+    <ptLine id="3019044" name="S2: S Buch =&gt; S Lichtenrade" line="S2" type="train" vClass="rail" period="1200" completeness="0.05">
+        <route edges="459344272 459344270#1"/>
+        <busStop id="4946539237" name="S Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="3019045" name="S2: S Lichtenrade =&gt; S Bernau" line="S2" type="train" vClass="rail" period="1200" completeness="0.04">
+        <route edges="459344269"/>
+        <busStop id="322796388" name="S Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="3353027" name="Bus N6: U Alt-Mariendorf =&gt; U Alt-Tegel" line="N6" type="bus" vClass="bus" nightService="only" completeness="0.04">
+        <route edges="-884209962#2 -22972470#3 -22972470#2 -22972470#1 -22972473#5 -22972473#4 -22972473#3 -22972473#2 -35557143#4 196850609#0 196850609#1 196850609#2 882389497 194069450#0 169999355#0 -11483007#2 22972195#2 465376239"/>
+        <busStop id="-5824647400" name="Französische Straße"/>
+        <busStop id="3869306772" name="U Unter den Linden"/>
+    </ptLine>
+    <ptLine id="6187328" name="Bus N42: S+U Alexanderplatz =&gt; U Theodor-Heuss-Platz" line="N42" type="bus" vClass="bus" nightService="only" completeness="0.02">
+        <route edges="4611722#0 42747981#2"/>
+        <busStop id="1361328318" name="U Spittelmarkt"/>
+    </ptLine>
+    <ptLine id="6622626" name="Bus 147: U Leopoldplatz =&gt; Mitte, Fischerinsel" line="147" type="bus" vClass="bus" completeness="0.15">
+        <route edges="465376240#0 195411604 11483007#0 -169999355#2 -194069450#2 -882389497 171423001#0 171423001#1 171423001#2 35557143#1 389101365#0 389101365#3 66071366#0 66071366#1 66071366#2 66071366#3 23755950#0 23755950#1 23755950#2 4611696#1 4611696#4 4611696#5 8008608 -120675240#4 -120675240#3 -120675240#2"/>
+        <busStop id="-3869306770" name="U Unter den Linden"/>
+        <busStop id="3869306767" name="Französische Straße"/>
+        <busStop id="3869306774" name="Werderscher Markt"/>
+    </ptLine>
+    <ptLine id="6622627" name="Bus 147: Mitte, Fischerinsel =&gt; U Leopoldplatz" line="147" type="bus" vClass="bus" completeness="0.15">
+        <route edges="120675240#0 120675240#3 120675240#4 -8008608 -4611696#5 -4611696#4 -4611696#3 -23755950#4 -23755950#1 -23755950#0 -66071366#4 -66071366#2 -66071366#1 -66071366#0 -389101365#4 -389101365#2 -35557143#4 196850609#0 196850609#1 196850609#2 882389497 194069450#0 169999355#0 -11483007#2 22972195#2 465376239"/>
+        <busStop id="-3869306773" name="Werderscher Markt"/>
+        <busStop id="-5824647400" name="Französische Straße"/>
+        <busStop id="3869306772" name="U Unter den Linden"/>
+    </ptLine>
+    <ptLine id="6784107" name="Bus 265: Mitte, Fischerinsel =&gt; U Stadtmitte" line="265" type="bus" vClass="bus" completeness="0.40">
+        <route edges="4611722#0 168515533#2 168515533#4 168515533#5 375312063#0 375312063#2 110786129#1"/>
+        <busStop id="3352479250" name="U Spittelmarkt"/>
+        <busStop id="3352479224" name="Jerusalemer Straße"/>
+    </ptLine>
+    <ptLine id="7794031" name="S26: S Teltow Stadt =&gt; S Waidmannslust" line="S26" type="train" vClass="rail" period="600" completeness="0.04">
+        <route edges="459344269"/>
+        <busStop id="322796388" name="S Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="7794032" name="S26: S Waidmannslust =&gt; S Teltow Stadt" line="S26" type="train" vClass="rail" period="600" completeness="0.04">
+        <route edges="459344272 459344270#1"/>
+        <busStop id="4946539237" name="S Brandenburger Tor"/>
+    </ptLine>
+    <ptLine id="9884615" name="Bus 300: S+U Warschauer Straße =&gt; Tiergarten, Philharmonie Süd" line="300" type="bus" vClass="bus" completeness="0.25">
+        <route edges="339201219 541763974 61584187#1 61584187#2 61584187#3 61584187#4 54048863 15971197#0 15971197#1 4611699 751602168 169195795#0 169195795#1 169195795#4 169195795#5 169195795#6 169195795#7 169195795#9 882389494 340498988#0 188386313#1 188386313#2 24913267#0 24913267#3 4402014#0 4402014#3 326116285#0 326116285#2 326116285#3 4401967#0 335462916 85255870#0 85255869#0 710761407#0 710761407#1 710761407#3 335462921#1"/>
+        <busStop id="3867910420" name="U Museumsinsel"/>
+        <busStop id="271296293" name="Staatsoper"/>
+        <busStop id="272408975" name="U Unter den Linden"/>
+        <busStop id="3862767501" name="Behrenstraße/Wilhelmstraße"/>
+        <busStop id="272441720" name="U Mohrenstraße"/>
+    </ptLine>
+    <ptLine id="9884616" name="Bus 300: Tiergarten, Philharmonie Süd =&gt; S+U Warschauer Straße" line="300" type="bus" vClass="bus" completeness="0.23">
+        <route edges="-335462921#4 -710761407#4 -710761407#2 -710761407#0 -85255869#2 -85255870#2 -335462916 -4401967#2 -335462874#2 -326116285#2 -326116285#1 -4402014#3 -4402014#2 -326116286#2 -24913267#2 342968607#1 461526152#0 340498982#0 340498982#2 340498982#3 340498982#4 340498982#5 340498982#8 340498982#9 354528932#0 354528932#1 251884680 339201217#0 339201217#1 15971196 54048862#0 54048862#1 54048862#3 831694400"/>
+        <busStop id="-272441719" name="U Mohrenstraße"/>
+        <busStop id="-4692172068" name="Behrenstraße/Wilhelmstraße"/>
+        <busStop id="3869306771" name="U Unter den Linden"/>
+        <busStop id="3870475228" name="Staatsoper"/>
+        <busStop id="3867910421" name="U Museumsinsel"/>
+    </ptLine>
+</ptLines>
