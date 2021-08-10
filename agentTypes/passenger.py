@@ -16,12 +16,6 @@ class PassengerState(Enum):
 
 class Passenger(Agent):
 
-    def connect_traci(self):
-        self.connection = traci.connect(port=self.port, numRetries=10, host="localhost")
-
-    def step_simulation(self):
-        traci.simulationStep()
-
     def on_init(self):
         self.state = PassengerState.PASSIVE
 
