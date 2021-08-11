@@ -3,29 +3,34 @@ from icecream import ic
 from osbrain import Agent
 
 
-class Organizer(Agent):
+# TODO: I could also add a street name to edge to make better messages but it's not super important now
 
+class Organizer(Agent):
+    id = ""
     borders = []
     drivers = []
     passengers = []
     reservations = []
+    taxis = {"PASSIVE": {},
+             "TO_DISPATCH": {},
+             "DRIVING_FULL": {},
+             "DRIVING_NOT_FULL": {}
+             }
 
+    passengers = {
+        "NO_REQUESTS": {},
+        "PASSIVE": {},
+        "WAITING": {},
+        "DRIVING": {}
+    }
 
-    def on_init(self):
-        ic("on init")
+    def after_init(self, id, edge_positions):
+        ic(f"Organizer init {self.id}")
+        self.id = id
+        self.edge_positions = edge_positions
 
-    def connect_traci(self):
-        connection = traci.connect(port=self.port, numRetries=10)
-        connection.setOrder(2)
-
-    def step_simulation(self):
-        traci.simulationStep()
-
-    def check_places(self):
-        print("*****************")
-        ic(traci.vehicle.getIDList())
-        #for v in range(0, len(self.vehicles)):
-            #ic(traci.vehicle.getSubscriptionResults(self.vehicles[v]))
+    def choose_taxi_to_dispatch(self):
+        pass
 
     def set_borders(self, borders):
         self.borders = borders
@@ -51,8 +56,14 @@ class Organizer(Agent):
     def get_reservations(self):
         return self.reservations
 
+    def set_address(self, address):
+        self.address = address
+
+    def get_address(self):
+        return self.address
+
+    def get_id(self):
+        return self.id
+
     def reply_back(self, message):
-        ic(self.vehicles)
-        positions = [traci.vehicle.getSubscriptionResults(v) for v in self.vehicles]
-        #ic(positions)
-        return 'Received %s' % str(message[2])
+        return f'Received request from {message[0]} travelling to {message[1]}'

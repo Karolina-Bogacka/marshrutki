@@ -32,3 +32,6 @@ lanes and edges at the beginning was planned anyways.
   
 python randomTrips.py -n config-smaller-berlin/osm.net.xml --trip-attributes="departLane=\"best\" departSpeed=\"max\" departPos=\"random\"" --
 additional-file config-smaller-berlin/add.xml -o config-smaller-berlin/output-trips.xml -e 50 --validate
+
+
+- ch
