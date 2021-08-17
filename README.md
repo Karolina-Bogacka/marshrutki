@@ -34,4 +34,4 @@ python randomTrips.py -n config-smaller-berlin/osm.net.xml --trip-attributes="de
 additional-file config-smaller-berlin/add.xml -o config-smaller-berlin/output-trips.xml -e 50 --validate
 
 
-- ch
+- 

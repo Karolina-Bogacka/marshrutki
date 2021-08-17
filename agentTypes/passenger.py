@@ -12,15 +12,14 @@ class PassengerState(Enum):
 
 class Passenger(Agent):
 
-    # TODO: change the position to be two-dimensional, since that's what we get
-
     id = "passenger"
     edge = ""
     position1D = 0
-    position2D = [0,0]
+    position2D = [0, 0]
     destination = None
     state = PassengerState.PASSIVE
     organizer = "organizer"
+    current_reservation = -1
 
     def after_init(self, id, start, position1D, position2D, destination, organizer):
         ic(f"Passenger init {self.id}")
@@ -31,12 +30,46 @@ class Passenger(Agent):
         self.destination = destination
         self.organizer = organizer
         self.position2D = position2D
+        self.waiting = 0
+
+    def spawn_new_request(self, destination):
+        if PassengerState.NO_REQUESTS:
+            self.destination = destination
+            self.waiting = 0
+            self.state = PassengerState.PASSIVE
 
     def handle_state(self):
         if self.state == PassengerState.PASSIVE:
             if self.destination is not None:
-                self.ask_for_reservation()
+                if self.waiting == 10:
+                    self.log_info("Waiting for more than 10 attempts")
 
+                self.ask_for_reservation()
+                self.waiting += 1
+
+    def update_reservation(self, updated):
+        # nie wiem, na ile to jest konieczne
+        # szczególnie, że teoretycznie kierowca/agent będący kierowcą
+        # powinien to zmieniać i wiedzieć
+        if self.current_reservation in updated:
+            if self.state == PassengerState.WAITING:
+                self.log_info("Passenger apparently picked up")
+                self.state = PassengerState.DRIVING # passenger already picked up
+        elif self.state == PassengerState.DRIVING:
+            self.state = PassengerState.NO_REQUESTS
+            self.current_reservation = -1
+            self.log_info("Destination apparently reached")
+
+    def update_dispatched(self, message):
+        if self.id == message[0]:
+            self.state = PassengerState.WAITING
+            self.current_reservation = message[1]
+            self.log_info(f"Passenger {self.id} waiting for dispatched taxi")
+
+    def update_assigned(self, message):
+        if self.id == message[0]:
+            self.state = PassengerState.WAITING
+            self.log_info(f"Passenger {self.id} assigned to a taxi")
 
     def set_attr(self, id, start_edge, position):
         self.id = id

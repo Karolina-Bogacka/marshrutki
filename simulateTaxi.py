@@ -24,7 +24,7 @@ def assign_organizer(edge, position, subject, organizers):
         if pos[0] >= borders[0][0] and pos[1] >= borders[0][1]:
             if pos[0] < borders[1][0] and pos[1] < borders[1][1]:
                 passes = org.get_passengers()
-                passes['NO_REQUESTS'][subject.get_id()] = subject
+                passes['NO_REQUESTS'][subject.get_id()] = pos
                 org.set_passengers(passes)
                 return org
     return None
@@ -40,7 +40,7 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
     generated = read_generated_routes(generated_routes)
     lanes = traci.lane.getIDList()
     lengths = {traci.lane.getEdgeID(lane): traci.lane.getLength(lane) for lane in lanes}
-    edge_positions = {key: traci.simulation.convert2D(key, int(value/2)) for key, value in lengths.items()}
+    edge_positions = {key: traci.simulation.convert2D(key, int(value / 2)) for key, value in lengths.items()}
 
     organizers = []
     indexes = divisors.copy()
@@ -48,7 +48,6 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
         organizer = run_agent(f'organizer-{o}', base=Organizer, attributes=dict(port=port))
         organizer.after_init(f'organizer-{o}', edge_positions=edge_positions)
         organizer.set_borders([start_end, new_end])
-        ic(f'organizer-{o}')
         addr = organizer.bind('SYNC_PUB', alias=f'organizer-{o}', handler=Organizer.reply_back)
         organizer.set_address(addr)
         organizers.append(organizer)
@@ -64,6 +63,7 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
             indexes[1] -= 1
 
     passengers = {}
+    passenger_positions = {}
     for i in range(pass_num):
         route = traci.route.getEdges(generated[-1 * i])
         position = random.randrange(0, math.floor(lengths[route[0]]))
@@ -73,30 +73,37 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
 
         org = assign_organizer(route[0], position, passenger, organizers)
         address = org.get_address()
-        passenger.connect(address, alias = org.get_id(), handler=Passenger.read_subscription)
-        ic(org.get_id())
+        passenger.connect(address, alias=org.get_id(),
+                          handler={'Main': Passenger.read_subscription, 'Passenger_dispatched':
+                                   Passenger.update_dispatched, 'Passenger_assigned': Passenger.update_assigned})
         passenger.after_init(id=f'person-{i}', start=route[0], position1D=position,
                              position2D=traci.simulation.convert2D(route[0], position), destination=route[-1],
                              organizer=org.get_id())
-        passenger.each(1.0, Passenger.handle_state)
+        passenger.each(3.0, Passenger.handle_state)
 
         traci.person.subscribe(f'person-{i}', [traci.tc.VAR_POSITION])
         passengers[f'person-{i}'] = passenger
+        passenger_positions[f'person-{i}'] = traci.simulation.convert2D(route[0], position)
 
     vehicles = {}
+    vehicle_positions = {}
+    passenger_stops = {}
     for i in range(veh_num):
         vehicle = run_agent(f'vehicle-{i}', base=MiniBus)
-        vehicle.after_init(f'vehicle-{i}')
+        vehicle.after_init(f'vehicle-{i}', organizers[0].get_id())
         traci.vehicle.add(f'vehicle-{i}', generated[i], typeID="marshrutka", line="taxi")
         address = organizers[0].get_address()
-        vehicle.connect(address, handler=MiniBus.read_subscription)
-        vehicle.each(1.0, MiniBus.handle_state)
+        vehicle.connect(address, alias=organizers[0].get_id(),
+                        handler={"Main": MiniBus.read_subscription, "Vehicle_subscribe": MiniBus.read_subscription})
+        vehicle.each(3.0, MiniBus.handle_state)
         traci.vehicle.subscribe(f'vehicle-{i}', [traci.tc.VAR_POSITION])
-        vehicles[f'vehicle-{i}'] = vehicle
+        vehicles[f'vehicle-{i}'] = [0, 0]
+        vehicle_positions[f'vehicle-{i}'] = vehicle
+        passenger_stops[f'vehicle-{i}'] = []
     organizers[0].set_drivers(vehicles)
+    organizers[0].set_passenger_stops(passenger_stops)
 
-
-    return organizers, passengers, vehicles
+    return organizers, passengers, vehicle_positions
 
 
 def read_generated_routes(file):
@@ -114,16 +121,42 @@ def read_generated_routes(file):
 
 def update_drivers(drivers):
     vehicle_positions = traci.vehicle.getAllSubscriptionResults()
+    picked_up = traci.person.getTaxiReservations(8)
+    picked_people = [res.persons[0] for res in picked_up]
     for driver_key in drivers:
-        drivers[driver_key].set_position(vehicle_positions[driver_key][66])
-    pass
+        drivers[driver_key].update_picked(picked_people)
+        drivers[driver_key].update_delivered(picked_people)
+        if driver_key in vehicle_positions:
+            drivers[driver_key].set_position(vehicle_positions[driver_key][66])
+        if drivers[driver_key].check_to_dispatch():
+            order = drivers[driver_key].get_order()
+            reservations = drivers[driver_key].get_reservations()
+            to_inform = []
+            for passenger in set(order):
+                # update passengers without reservation
+                if passenger not in reservations:
+                    stop = drivers[driver_key].get_stop(passenger)
+                    traci.person.appendDrivingStage(passenger, stop, 'taxi')
+                    id = [res.id for res in traci.person.getTaxiReservations() if passenger in res.persons and res.state in [1, 2]]
+                    if id:
+                        drivers[driver_key].set_reservation(passenger, id[0])
+                        to_inform.append(passenger)
+            reservations = drivers[driver_key].get_reservations()
+            ic(reservations)
+            dispatch_order = [reservations[o] for o in order]
+            traci.vehicle.dispatchTaxi(driver_key, dispatch_order)
+            drivers[driver_key].update_dispatched(to_inform)
 
 
 def update_passengers(passengers):
     passenger_positions = traci.person.getAllSubscriptionResults()
+    picked_up = traci.person.getTaxiReservations(8)
+    picked_ids = [res.id for res in picked_up]
     for pass_key in passengers:
-        passengers[pass_key].set_position(passenger_positions[pass_key][66])
-    pass
+        if pass_key in passenger_positions:
+            passengers[pass_key].set_position(passenger_positions[pass_key][66])
+        passengers[pass_key].update_reservation(picked_ids)
+
 
 
 def update_organizers(organizers):
@@ -148,10 +181,10 @@ def simulate(pass_num, veh_num, org_num=1, generated_routes='config-smaller-berl
         update_drivers(vehicles)
         update_passengers(passengers)
         update_organizers(organizers)
-        reservations = traci.person.getTaxiReservations()
-        for i in range(len(reservations)):
-            if reservations[i].state == 1:
-                traci.vehicle.dispatchTaxi(f'vehicle-{i}', [reservations[i].id])
+        # reservations = traci.person.getTaxiReservations()
+        # for i in range(len(reservations)):
+        #    if reservations[i].state == 1:
+        #        traci.vehicle.dispatchTaxi(f'vehicle-{i}', [reservations[i].id])
         step += 1
     traci.close(False)
     ns.shutdown()
