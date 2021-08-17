@@ -45,6 +45,7 @@ class Organizer(Agent):
             available_taxis = self.taxis["PASSIVE"] | self.taxis["DRIVING_NOT_FULL"] | self.taxis["TO_DISPATCH"]
             for taxi in available_taxis:
                 if len(self.passenger_stops[taxi]) == 0:
+                    ic(self.passenger_stops[taxi])
                     new_dist = distance.euclidean(position, available_taxis[taxi])
                     new_dist += distance.euclidean(dest_pos, available_taxis[taxi])
                     if new_dist <= closest_distance:
@@ -56,6 +57,7 @@ class Organizer(Agent):
                     # and computes distances
                     # but since all those are unsorted, we should probably do a double loop
                     # with i always smaller than j and find the positions to insert in this way
+                    ic(self.passenger_stops[taxi])
                     for i in range(0, len(self.passenger_stops[taxi])-1):
                         for j in range(i+1, len(self.passenger_stops[taxi])):
                             new_dist = distance.euclidean(position, self.passenger_stops[taxi][i][1])
@@ -144,11 +146,20 @@ class Organizer(Agent):
         # we can use the topic mechanic better by sending bigger messages to everyone here in some cases
         # maybe the passengers can have randomized ids for the ride? so that name/surname unclear
         self.send(self.id, ["Passenger picked up", message[1]], topic="Passenger_picked")
-        self.passenger_stops[message[2]] = message[3]
+        offset = len(self.passenger_stops[message[2]]) - len(message[3])
+        ic(self.passenger_stops[message[2]])
+        self.passenger_stops[message[2]] = [self.passenger_stops[message[2]][i+offset] for i in range(len(message[3]))]
+        ic(self.passenger_stops[message[2]])
+        ic(message[3])
 
     def reply_delivered(self, message):
-        self.send(self.id, ["Passenger delivered", message[1]], topic="Passenger_delivered")
-        self.passenger_stops[message[2]] = message[3]
+        self.send(self.id, ["Passenger delivered", message[1]], topic="Passenger_picked")
+        ic(self.passenger_stops[message[2]])
+        offset = len(self.passenger_stops[message[2]]) - len(message[3])
+        self.passenger_stops[message[2]] = [self.passenger_stops[message[2]][i + offset] for i in
+                                            range(len(message[3]))]
+        ic(self.passenger_stops[message[2]])
+        ic(message[3])
         del self.reservations[message[1]]
 
     def reply_dispatched_back(self, message):

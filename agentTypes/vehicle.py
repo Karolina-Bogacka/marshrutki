@@ -114,6 +114,8 @@ class MiniBus(Agent):
         self.free_places += change
         if self.free_places <= 0:
             self.state = MiniBusState.DRIVING_FULL
+        elif self.free_places >=8:
+            self.state = MiniBusState.PASSIVE
         elif self.free_places > 0:
             self.state = MiniBusState.DRIVING_NOT_FULL
 

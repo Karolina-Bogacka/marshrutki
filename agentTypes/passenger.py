@@ -38,27 +38,27 @@ class Passenger(Agent):
             self.waiting = 0
             self.state = PassengerState.PASSIVE
 
+    def get_state(self):
+        return self.state
+
     def handle_state(self):
         if self.state == PassengerState.PASSIVE:
             if self.destination is not None:
                 if self.waiting == 10:
                     self.log_info("Waiting for more than 10 attempts")
-
                 self.ask_for_reservation()
                 self.waiting += 1
 
-    def update_reservation(self, updated):
-        # nie wiem, na ile to jest konieczne
-        # szczególnie, że teoretycznie kierowca/agent będący kierowcą
-        # powinien to zmieniać i wiedzieć
-        if self.current_reservation in updated:
+    def update_reservation(self, message):
+        ic(message)
+        if message[1] == self.id:
             if self.state == PassengerState.WAITING:
                 self.log_info("Passenger apparently picked up")
                 self.state = PassengerState.DRIVING # passenger already picked up
-        elif self.state == PassengerState.DRIVING:
-            self.state = PassengerState.NO_REQUESTS
-            self.current_reservation = -1
-            self.log_info("Destination apparently reached")
+            elif self.state == PassengerState.DRIVING:
+                self.state = PassengerState.NO_REQUESTS
+                self.current_reservation = -1
+                self.log_info("Destination apparently reached")
 
     def update_dispatched(self, message):
         if self.id == message[0]:
