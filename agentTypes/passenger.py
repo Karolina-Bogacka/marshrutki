@@ -1,6 +1,6 @@
-from osbrain import Agent
 from enum import Enum
 from icecream import ic
+from osbrain import Agent
 
 
 class PassengerState(Enum):
@@ -35,8 +35,8 @@ class Passenger(Agent):
     def spawn_new_request(self, destination):
         if PassengerState.NO_REQUESTS:
             self.destination = destination
-            self.waiting = 0
             self.state = PassengerState.PASSIVE
+            self.waiting = 0
 
     def get_state(self):
         return self.state
@@ -44,20 +44,18 @@ class Passenger(Agent):
     def handle_state(self):
         if self.state == PassengerState.PASSIVE:
             if self.destination is not None:
-                if self.waiting == 10:
+                if self.waiting >= 10:
                     self.log_info("Waiting for more than 10 attempts")
                 self.ask_for_reservation()
                 self.waiting += 1
 
     def update_reservation(self, message):
-        ic(message)
         if message[1] == self.id:
             if self.state == PassengerState.WAITING:
                 self.log_info("Passenger apparently picked up")
                 self.state = PassengerState.DRIVING # passenger already picked up
             elif self.state == PassengerState.DRIVING:
                 self.state = PassengerState.NO_REQUESTS
-                self.current_reservation = -1
                 self.log_info("Destination apparently reached")
 
     def update_dispatched(self, message):
@@ -76,7 +74,6 @@ class Passenger(Agent):
         self.edge = start_edge
         self.position = position
 
-    # I guess I could understand it as done on the organizer side.
     def add_request(self, finish_edge):
         self.destination = finish_edge
 

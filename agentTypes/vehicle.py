@@ -41,7 +41,6 @@ class MiniBus(Agent):
         return self.position2D
 
     def handle_state(self):
-        ic(f"Handling state {self.id}")
         self.send(self.organizer, [self.id, self.position2D], handler=MiniBus.process_reply)
         if self.available_places == 0 and self.state != MiniBusState.DRIVING_FULL:
             self.state = MiniBusState.DRIVING_FULL
@@ -49,10 +48,10 @@ class MiniBus(Agent):
     def read_subscription(self, message):
         if self.id == message[0]:
             if self.state == MiniBusState.PASSIVE or self.state == MiniBusState.DRIVING_NOT_FULL or self.state == MiniBusState.TO_DISPATCH:
-                self.state = MiniBusState.TO_DISPATCH
                 self.passengers.append(message[1])
                 self.stops[message[1]] = message[2]
                 self.order = message[3]
+                self.state = MiniBusState.TO_DISPATCH
                 self.log_info(f'Read and approved request from {message[1]} to reach {message[2]}')
                 return True
 
@@ -62,14 +61,13 @@ class MiniBus(Agent):
                 self.order.remove(p)
                 self.log_info(f"Picked up passenger {p}")
                 self.send(self.organizer, ["Picked up", p, self.id, self.order], handler=MiniBus.process_reply)
-                # but it doesn't make sense to remove it from reservations just yet
 
     def update_delivered(self, picked):
         counted_orders = Counter(self.order)
         for c in counted_orders:
             if counted_orders[c] == 1 and c not in picked:
                 self.order.remove(c)
-                del self.reservations[c]
+                self.reservations.pop(c, None)
                 self.update_free_places(change=1)
                 self.log_info(f"Delivered passenger {c}")
                 self.send(self.organizer, ["Delivered", c, self.id, self.order], handler=MiniBus.process_reply)
@@ -96,7 +94,6 @@ class MiniBus(Agent):
         return self.stops
 
     def get_stop(self, passenger):
-        ic(self.stops)
         return self.stops[passenger]
 
     def update_dispatched(self, passengers):
@@ -109,8 +106,6 @@ class MiniBus(Agent):
         self.log_info("Dispatch confirmed")
 
     def update_free_places(self, change=-1):
-        # how should I update free places when a customer leaves?
-        # I think I will have to go back here after I implement passengers leaving communication
         self.free_places += change
         if self.free_places <= 0:
             self.state = MiniBusState.DRIVING_FULL

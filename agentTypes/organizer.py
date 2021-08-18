@@ -2,7 +2,6 @@ from icecream import ic
 from osbrain import Agent
 from scipy.spatial import distance
 
-# TODO: I could also add a street name to edge to make better messages but it's not super important now
 from agentTypes.vehicle import MiniBusState
 
 
@@ -30,57 +29,46 @@ class Organizer(Agent):
         self.edge_positions = edge_positions
 
     def choose_taxi_to_dispatch(self, destination_edge, position, passenger_id):
-        # do I want to check taxis that are to dispatch here?
-        # mayybe
-        # altho honestly the important info is whether these are full AND I need access to their
-        # reservation lists to get the stop, right? not just position. I should be able to compute
-        # res order based on person's position, destination, reserv id and stuff
-        # how about I add a system with taxi ids and reservation lists, that would be updated based on here
         dest_pos = self.edge_positions[destination_edge]
         if self.taxis["PASSIVE"] or self.taxis["DRIVING_NOT_FULL"] or self.taxis["TO_DISPATCH"]:
             closest = None
             insert_orders = [0, 1]
-            # furthest possible distance
             closest_distance = distance.euclidean(self.borders[0], self.borders[1])*2
+            closest_len = 16
             available_taxis = self.taxis["PASSIVE"] | self.taxis["DRIVING_NOT_FULL"] | self.taxis["TO_DISPATCH"]
             for taxi in available_taxis:
                 if len(self.passenger_stops[taxi]) == 0:
-                    ic(self.passenger_stops[taxi])
                     new_dist = distance.euclidean(position, available_taxis[taxi])
                     new_dist += distance.euclidean(dest_pos, available_taxis[taxi])
-                    if new_dist <= closest_distance:
+                    if new_dist <= closest_distance + closest_len*100:
                         closest_distance = new_dist
                         closest = taxi
+                        closest_len = 0
                         insert_orders = [0, 1]
                 else:
-                    # one index goes from the start, one from the end
-                    # and computes distances
-                    # but since all those are unsorted, we should probably do a double loop
-                    # with i always smaller than j and find the positions to insert in this way
-                    ic(self.passenger_stops[taxi])
+                    new_len = len(self.passenger_stops[taxi])
                     for i in range(0, len(self.passenger_stops[taxi])-1):
                         for j in range(i+1, len(self.passenger_stops[taxi])):
-                            new_dist = distance.euclidean(position, self.passenger_stops[taxi][i][1])
+                            new_dist = (distance.euclidean(position, self.passenger_stops[taxi][i][1]) + distance.euclidean(available_taxis[taxi], position))/2
                             if i > 0:
-                                new_dist = (new_dist + distance.euclidean(position, self.passenger_stops[taxi][i-1][1]))/2
+                                new_dist = (distance.euclidean(position, self.passenger_stops[taxi][i][1]) + distance.euclidean(position, self.passenger_stops[taxi][i-1][1]))/2
                             if j == len(self.passenger_stops[taxi]):
-                                new_dist += distance.euclidean(position, self.passenger_stops[taxi][j][1])
+                                new_dist += (distance.euclidean(dest_pos, self.passenger_stops[taxi][j][1])+distance.euclidean(available_taxis[taxi], dest_pos))/2
                             else:
-                                new_dist += distance.euclidean(position, self.passenger_stops[taxi][j][1])+ distance.euclidean(position, self.passenger_stops[taxi][j-1][1])
-                            if new_dist <= closest_distance:
+                                new_dist += (distance.euclidean(dest_pos, self.passenger_stops[taxi][j][1])+ distance.euclidean(dest_pos, self.passenger_stops[taxi][j-1][1]))/2
+                            if new_dist + new_len*100 <= closest_distance + closest_len*100:
                                 closest_distance = new_dist
                                 closest = taxi
+                                closest_len = new_len
                                 insert_orders = [i, j]
-            ic(closest)
             self.passenger_stops[closest].insert(insert_orders[0], (passenger_id, position))
             self.passenger_stops[closest].insert(insert_orders[1], (passenger_id, dest_pos))
-            ic(self.passenger_stops[closest])
             order = [tup[0] for tup in self.passenger_stops[closest]]
             if closest in self.taxis["PASSIVE"]:
                 val = self.taxis["PASSIVE"].pop(closest)
                 self.taxis["TO_DISPATCH"][closest] = val
             elif closest in self.taxis["DRIVING_NOT_FULL"]:
-                if closest in self.reservations and len(self.reservations[closest]) >= 16:
+                if closest in self.passenger_stops and len(self.passenger_stops[closest]) <= 16:
                     val = self.taxis["DRIVING_NOT_FULL"].pop(closest)
                     self.taxis["TO_DISPATCH"][closest] = val
             return closest, order
@@ -143,28 +131,22 @@ class Organizer(Agent):
             return self.reply_vehicle_back(message)
 
     def reply_picked_up(self, message):
-        # we can use the topic mechanic better by sending bigger messages to everyone here in some cases
-        # maybe the passengers can have randomized ids for the ride? so that name/surname unclear
         self.send(self.id, ["Passenger picked up", message[1]], topic="Passenger_picked")
-        offset = len(self.passenger_stops[message[2]]) - len(message[3])
-        ic(self.passenger_stops[message[2]])
-        self.passenger_stops[message[2]] = [self.passenger_stops[message[2]][i+offset] for i in range(len(message[3]))]
-        ic(self.passenger_stops[message[2]])
-        ic(message[3])
+        for key in self.passenger_stops[message[2]]:
+            if message[3].count(key) == 1:
+                elements = [e for e in self.passenger_stops[message[2]] if e[0] == key]
+                self.passenger_stops[message[2]].remove(elements[0])
 
     def reply_delivered(self, message):
         self.send(self.id, ["Passenger delivered", message[1]], topic="Passenger_picked")
-        ic(self.passenger_stops[message[2]])
-        offset = len(self.passenger_stops[message[2]]) - len(message[3])
-        self.passenger_stops[message[2]] = [self.passenger_stops[message[2]][i + offset] for i in
-                                            range(len(message[3]))]
-        ic(self.passenger_stops[message[2]])
-        ic(message[3])
-        del self.reservations[message[1]]
+        self.passenger_stops[message[2]] = [m for m in self.passenger_stops[message[2]] if m[0] in message[3]]
+        if len(self.passenger_stops[message[2]])<=14 and message[2] in self.taxis["DRIVING_FULL"]:
+            val = self.taxis["DRIVING_FULL"].pop(message[2])
+            self.taxis["DRIVING_NOT_FULL"][message[2]] = val
+        self.reservations.pop(message[1], None)
 
     def reply_dispatched_back(self, message):
         self.log_info(f"Taxi {message[1]} dispatched to {message[2]}")
-        ic(message)
         self.reservations[message[2]] = message[5]
         self.send(self.id, [message[2], message[5]], topic="Passenger_dispatched")
         if message[4] == MiniBusState.DRIVING_FULL and message[1] in self.taxis["TO_DISPATCH"]:
@@ -184,9 +166,7 @@ class Organizer(Agent):
         return f'Received request from {message[0]} travelling to {message[1]}'
 
     def reply_vehicle_back(self, message):
-        self.log_info(f"Request to update current position of vehicle {message[0]} as {message}")
         for category in self.taxis:
             if message[0] in self.taxis[category]:
                 self.taxis[category][message[0]] = message[1]
-                self.log_info(f"Updated taxi position {message[0]} to {message[1]}")
         return f'Received request from {message[0]} at position {message[1]}'
