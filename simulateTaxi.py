@@ -9,6 +9,7 @@ from operator import concat
 import osbrain
 import traci
 from defusedxml import minidom
+from icecream import ic
 from osbrain import run_nameserver, run_agent
 from sumolib.miscutils import getFreeSocketPort
 
@@ -18,17 +19,15 @@ from agentTypes.vehicle import MiniBus
 from utils import closest_divisors
 
 
-def assign_organizer(edge, position, subject, organizers):
+def assign_organizer(edge, position, organizers):
     pos = traci.simulation.convert2D(edge, position)
     for org in organizers:
         borders = org.get_borders()
         if pos[0] >= borders[0][0] and pos[1] >= borders[0][1]:
             if pos[0] < borders[1][0] and pos[1] < borders[1][1]:
-                passes = org.get_passengers()
-                passes['NO_REQUESTS'][subject.get_id()] = pos
-                org.set_passengers(passes)
                 return org
     return None
+
 
 def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
     divisors = closest_divisors(org_num)
@@ -40,7 +39,7 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
     generated, edges = read_generated_routes(generated_routes)
     lanes = traci.lane.getIDList()
     lengths = {traci.lane.getEdgeID(lane): traci.lane.getLength(lane) for lane in lanes}
-    validated_lengths = {l:lengths[l] for l in lengths if l in edges}
+    validated_lengths = {l: lengths[l] for l in lengths if l in edges}
     edge_positions = {key: traci.simulation.convert2D(key, int(value / 2)) for key, value in lengths.items()}
 
     organizers = []
@@ -73,13 +72,13 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
         traci.person.appendWaitingStage(f"person-{i}", 7)
         passenger = run_agent(f'person-{i}', base=Passenger)
 
-        org = assign_organizer(route[0], position, passenger, organizers)
+        org = assign_organizer(route[0], position, organizers)
         address = org.get_address()
         passenger.connect(address, alias=org.get_id(),
                           handler={'Main': Passenger.read_subscription, 'Passenger_dispatched':
-                                   Passenger.update_dispatched, 'Passenger_assigned': Passenger.update_assigned,
+                              Passenger.update_dispatched, 'Passenger_assigned': Passenger.update_assigned,
                                    "Passenger_picked": Passenger.update_reservation})
-        passenger.after_init(id=f'person-{i}', start=route[0], position1D=position,
+        passenger.after_init(index=f'person-{i}', start=route[0], position1D=position,
                              position2D=traci.simulation.convert2D(route[0], position), destination=route[-1],
                              organizer=org.get_id())
         passenger.each(5.0, Passenger.handle_state)
@@ -88,25 +87,31 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
         passengers[f'person-{i}'] = passenger
         passenger_positions[f'person-{i}'] = traci.simulation.convert2D(route[0], position)
 
-    vehicles = {}
-    vehicle_positions = {}
-    passenger_stops = {}
-    for i in range(veh_num):
-        vehicle = run_agent(f'vehicle-{i}', base=MiniBus)
-        vehicle.after_init(f'vehicle-{i}', organizers[0].get_id())
-        traci.vehicle.add(f'vehicle-{i}', generated[i], typeID="marshrutka", line="taxi")
-        address = organizers[0].get_address()
-        vehicle.connect(address, alias=organizers[0].get_id(),
+    veh_positions = {}
+    index = 0
+    for org in organizers:
+        vehicles = {}
+        vehicle_positions = {}
+        passenger_stops = {}
+        for i in range(veh_num):
+            vehicle = run_agent(f'vehicle-{index}', base=MiniBus)
+            vehicle.after_init(f'vehicle-{index}', org.get_id())
+            traci.vehicle.add(f'vehicle-{index}', generated[i], typeID="marshrutka", line="taxi")
+            address = org.get_address()
+            vehicle.connect(address, alias=org.get_id(),
                         handler={"Main": MiniBus.read_subscription, "Vehicle_subscribe": MiniBus.read_subscription})
-        vehicle.each(5.0, MiniBus.handle_state)
-        traci.vehicle.subscribe(f'vehicle-{i}', [traci.tc.VAR_POSITION])
-        vehicles[f'vehicle-{i}'] = [0, 0]
-        vehicle_positions[f'vehicle-{i}'] = vehicle
-        passenger_stops[f'vehicle-{i}'] = []
-    organizers[0].set_drivers(vehicles)
-    organizers[0].set_passenger_stops(passenger_stops)
+            vehicle.each(5.0, MiniBus.handle_state)
+            traci.vehicle.subscribe(f'vehicle-{index}', [traci.tc.VAR_POSITION])
+            vehicles[f'vehicle-{index}'] = [0, 0]
+            vehicle_positions[f'vehicle-{index}'] = vehicle
+            passenger_stops[f'vehicle-{index}'] = []
+            index += 1
+        org.set_drivers(vehicles)
+        org.set_passenger_stops(passenger_stops)
+        org.each(3.0, Organizer.handle_updates)
+        veh_positions = veh_positions | vehicle_positions
 
-    return organizers, passengers, vehicle_positions, validated_lengths
+    return organizers, passengers, veh_positions, validated_lengths
 
 
 def read_generated_routes(file):
@@ -114,7 +119,7 @@ def read_generated_routes(file):
     xmldoc = minidom.parse(file)
     itemlist = xmldoc.getElementsByTagName('trip')
     trips = [[item.attributes['from'].value, item.attributes['to'].value] for item in itemlist]
-    edges = set(reduce(concat,trips))
+    edges = set(reduce(concat, trips))
     routes = [traci.simulation.findRoute(trip[0], trip[1], vType="marshrutka") for trip in trips]
     for i in range(len(routes)):
         id_route = f'route-taxi-{i}'
@@ -135,10 +140,11 @@ def update_drivers(drivers):
         if drivers[driver_key].check_to_dispatch():
             order = drivers[driver_key].get_order()
             reservations = drivers[driver_key].get_reservations()
+            current_res = traci.person.getTaxiReservations()
             to_inform = []
             for passenger in set(order):
                 if passenger not in reservations:
-                    id = [res.id for res in traci.person.getTaxiReservations() if passenger in res.persons and res.state in [1, 2]]
+                    id = [res.id for res in current_res if passenger in res.persons and res.state in [1, 2]]
                     if id:
                         drivers[driver_key].set_reservation(passenger, id[0])
                         to_inform.append(passenger)
@@ -146,7 +152,10 @@ def update_drivers(drivers):
                         order = list(filter(lambda a: a != passenger, order))
             reservations = drivers[driver_key].get_reservations()
             dispatch_order = [reservations[o] for o in order]
-            traci.vehicle.dispatchTaxi(driver_key, dispatch_order)
+            try:
+                traci.vehicle.dispatchTaxi(driver_key, dispatch_order)
+            except traci.exceptions.TraCIException as e:
+                ic(e)
             drivers[driver_key].set_order(order)
             drivers[driver_key].update_dispatched(to_inform)
 
@@ -156,17 +165,17 @@ def update_passengers(passengers, edge_lengths):
     for pass_key in passengers:
         if pass_key in passenger_positions:
             passengers[pass_key].set_position(passenger_positions[pass_key][66])
-        if passengers[pass_key].get_state() == PassengerState.NO_REQUESTS and traci.person.getRemainingStages(pass_key)==1:
-            destination = random.choice(list(edge_lengths.keys()))
-            traci.person.appendDrivingStage(pass_key, destination, 'taxi')
-            traci.person.appendWaitingStage(pass_key, 7)
-            passengers[pass_key].spawn_new_request(destination)
-
+        if passengers[pass_key].get_state() == PassengerState.NO_REQUESTS:
+            if traci.person.getRemainingStages(pass_key) == 1:
+                destination = random.choice(list(edge_lengths.keys()))
+                traci.person.appendDrivingStage(pass_key, destination, 'taxi')
+                traci.person.appendWaitingStage(pass_key, 7)
+                passengers[pass_key].spawn_new_request(destination)
 
 
 def update_organizers(organizers):
-    # TODO: add updating and swapping the organizers when needed
-    pass
+    for o in organizers:
+        o.handle_updates()
 
 
 def simulate(pass_num, veh_num, org_num=1, generated_routes='config-smaller-berlin/output-trips.xml'):
@@ -178,13 +187,13 @@ def simulate(pass_num, veh_num, org_num=1, generated_routes='config-smaller-berl
                "--device.taxi.idle-algorithm", "randomCircling", "--device.rerouting.explicit", "marshrutka"]
     traci.start(sumoCmd, port=port)
 
-    organizers, passengers, vehicles, edge_lengths = simulation_setup(pass_num, veh_num, org_num, port, generated_routes)
+    organizers, passengers, vehicles, edges = simulation_setup(pass_num, veh_num, org_num, port, generated_routes)
 
     step = 0
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
         update_drivers(vehicles)
-        update_passengers(passengers, edge_lengths)
+        update_passengers(passengers, edges)
         update_organizers(organizers)
         step += 1
     traci.close(False)

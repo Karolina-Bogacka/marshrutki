@@ -26,9 +26,9 @@ class MiniBus(Agent):
     reservations = {}
     order = []
 
-    def after_init(self, id, organizer, available_places=8, free_places=8):
+    def after_init(self, index, organizer, available_places=8, free_places=8):
         ic(f"Marshrutka init {self.id}")
-        self.id = id
+        self.id = index
         self.state = MiniBusState.PASSIVE
         self.organizer = organizer
         self.available_places = available_places
@@ -40,19 +40,23 @@ class MiniBus(Agent):
     def get_position(self):
         return self.position2D
 
+    def set_order(self, order):
+        self.order = order
+
     def handle_state(self):
         self.send(self.organizer, [self.id, self.position2D], handler=MiniBus.process_reply)
         if self.available_places == 0 and self.state != MiniBusState.DRIVING_FULL:
             self.state = MiniBusState.DRIVING_FULL
 
     def read_subscription(self, message):
-        if self.id == message[0]:
-            if self.state == MiniBusState.PASSIVE or self.state == MiniBusState.DRIVING_NOT_FULL or self.state == MiniBusState.TO_DISPATCH:
-                self.passengers.append(message[1])
-                self.stops[message[1]] = message[2]
-                self.order = message[3]
+        if self.id in message:
+            if self.state != MiniBusState.DRIVING_FULL:
+                self.passengers.append(message[self.id][0])
+                for el in message[self.id][0]:
+                    self.stops[el] = message[self.id][0][el]
+                self.order = message[self.id][1]
                 self.state = MiniBusState.TO_DISPATCH
-                self.log_info(f'Read and approved request from {message[1]} to reach {message[2]}')
+                self.log_info(f'Approved request from {message[self.id][0].keys()} to reach {message[self.id][0].values()}')
                 return True
 
     def update_picked(self, picked):
@@ -73,7 +77,9 @@ class MiniBus(Agent):
                 self.send(self.organizer, ["Delivered", c, self.id, self.order], handler=MiniBus.process_reply)
 
     def process_reply(self, message):
-        self.log_info('Publisher replied with: "%s"' % message)
+        # uncomment to receive updates about the changing positions of agents
+        # self.log_info('Publisher replied with: "%s"' % message)
+        pass
 
     def get_newest_passenger(self):
         return self.passengers[-1]
@@ -99,7 +105,8 @@ class MiniBus(Agent):
     def update_dispatched(self, passengers):
         self.update_free_places(-len(passengers))
         for passenger in passengers:
-            self.send(self.organizer, ["Dispatched", self.id, passenger, self.stops[passenger], self.state, self.reservations[passenger]], handler=MiniBus.handle_dispatched_confirmation)
+            self.send(self.organizer, ["Dispatched", self.id, passenger, self.stops[passenger], self.state,
+                                       self.reservations[passenger]], handler=MiniBus.handle_dispatched_confirmation)
 
     def handle_dispatched_confirmation(self, message):
         ic("Handle dispatched")
@@ -109,7 +116,7 @@ class MiniBus(Agent):
         self.free_places += change
         if self.free_places <= 0:
             self.state = MiniBusState.DRIVING_FULL
-        elif self.free_places >=8:
+        elif self.free_places >= self.available_places:
             self.state = MiniBusState.PASSIVE
         elif self.free_places > 0:
             self.state = MiniBusState.DRIVING_NOT_FULL

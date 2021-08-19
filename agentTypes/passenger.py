@@ -4,14 +4,13 @@ from osbrain import Agent
 
 
 class PassengerState(Enum):
-    NO_REQUESTS = -1 # passenger has no requests for reservation
-    PASSIVE = 0 # passenger is waiting for the organizer to reserve taxi for it
-    WAITING = 1 # passenger is waiting for the taxi
-    DRIVING = 2 # passenger is driving in the taxi
+    NO_REQUESTS = -1  # passenger has no requests for reservation
+    PASSIVE = 0  # passenger is waiting for the organizer to reserve taxi for it
+    WAITING = 1  # passenger is waiting for the taxi
+    DRIVING = 2  # passenger is driving in the taxi
 
 
 class Passenger(Agent):
-
     id = "passenger"
     edge = ""
     position1D = 0
@@ -21,9 +20,9 @@ class Passenger(Agent):
     organizer = "organizer"
     current_reservation = -1
 
-    def after_init(self, id, start, position1D, position2D, destination, organizer):
+    def after_init(self, index, start, position1D, position2D, destination, organizer):
         ic(f"Passenger init {self.id}")
-        self.id = id
+        self.id = index
         self.state = PassengerState.PASSIVE
         self.start = start
         self.position1D = position1D
@@ -50,27 +49,27 @@ class Passenger(Agent):
                 self.waiting += 1
 
     def update_reservation(self, message):
-        if message[1] == self.id:
+        if self.id in message[1]:
             if self.state == PassengerState.WAITING:
                 self.log_info("Passenger apparently picked up")
-                self.state = PassengerState.DRIVING # passenger already picked up
+                self.state = PassengerState.DRIVING  # passenger already picked up
             elif self.state == PassengerState.DRIVING:
                 self.state = PassengerState.NO_REQUESTS
                 self.log_info("Destination apparently reached")
 
     def update_dispatched(self, message):
-        if self.id == message[0]:
+        if self.id in message:
             self.state = PassengerState.WAITING
-            self.current_reservation = message[1]
+            self.current_reservation = message[self.id]
             self.log_info(f"Passenger {self.id} waiting for dispatched taxi")
 
     def update_assigned(self, message):
-        if self.id == message[0]:
+        if self.id in message:
             self.state = PassengerState.WAITING
             self.log_info(f"Passenger {self.id} assigned to a taxi")
 
-    def set_attr(self, id, start_edge, position):
-        self.id = id
+    def set_attr(self, index, start_edge, position):
+        self.id = index
         self.edge = start_edge
         self.position = position
 
