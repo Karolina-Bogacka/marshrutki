@@ -1,5 +1,7 @@
 To run this project, first install SUMO (Simulation Of Urban Mobility) with sumo-gui included. Set appropriate variable 
-SUMO_HOME. Then, run simulateTaxi.py from directory marshrutki with two numerical arguments denoting the number of 
+SUMO_HOME. To activate the local environment on Windows, run .\agent-env\Scripts\activate.
+
+Then, run simulateTaxi.py from directory marshrutki with two numerical arguments denoting the number of 
 passengers and vehicles in the simulation.
 
 
