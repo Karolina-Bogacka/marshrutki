@@ -99,7 +99,7 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
             traci.vehicle.add(f'vehicle-{index}', generated[i], typeID="marshrutka", line="taxi")
             address = org.get_address()
             vehicle.connect(address, alias=org.get_id(),
-                        handler={"Main": MiniBus.read_subscription, "Vehicle_subscribe": MiniBus.read_subscription})
+                            handler={"Main": MiniBus.read_subscription, "Vehicle_subscribe": MiniBus.read_subscription})
             vehicle.each(5.0, MiniBus.handle_state)
             traci.vehicle.subscribe(f'vehicle-{index}', [traci.tc.VAR_POSITION])
             vehicles[f'vehicle-{index}'] = [0, 0]
@@ -128,36 +128,41 @@ def read_generated_routes(file):
     return ids, edges
 
 
+def update_driver(driver_key, drivers, picked_people, vehicle_positions):
+    drivers[driver_key].update_picked(picked_people)
+    drivers[driver_key].update_delivered(picked_people)
+    if driver_key in vehicle_positions:
+        drivers[driver_key].set_position(vehicle_positions[driver_key][66])
+    if drivers[driver_key].check_to_dispatch():
+        order = drivers[driver_key].get_order()
+        reservations = drivers[driver_key].get_reservations()
+        current_res = traci.person.getTaxiReservations()
+        to_inform = []
+        for passenger in set(order):
+            if passenger not in reservations:
+                id = [res.id for res in current_res if passenger in res.persons and res.state in [1, 2]]
+                if id:
+                    drivers[driver_key].set_reservation(passenger, id[0])
+                    to_inform.append(passenger)
+                else:
+                    ic(passenger)
+                    return
+        reservations = drivers[driver_key].get_reservations()
+        dispatch_order = [reservations[o] for o in order]
+        try:
+            traci.vehicle.dispatchTaxi(driver_key, dispatch_order)
+        except traci.exceptions.TraCIException as e:
+            ic(e)
+        drivers[driver_key].set_order(order)
+        drivers[driver_key].update_dispatched(to_inform)
+
+
 def update_drivers(drivers):
     vehicle_positions = traci.vehicle.getAllSubscriptionResults()
     picked_up = traci.person.getTaxiReservations(8)
     picked_people = [res.persons[0] for res in picked_up]
     for driver_key in drivers:
-        drivers[driver_key].update_picked(picked_people)
-        drivers[driver_key].update_delivered(picked_people)
-        if driver_key in vehicle_positions:
-            drivers[driver_key].set_position(vehicle_positions[driver_key][66])
-        if drivers[driver_key].check_to_dispatch():
-            order = drivers[driver_key].get_order()
-            reservations = drivers[driver_key].get_reservations()
-            current_res = traci.person.getTaxiReservations()
-            to_inform = []
-            for passenger in set(order):
-                if passenger not in reservations:
-                    id = [res.id for res in current_res if passenger in res.persons and res.state in [1, 2]]
-                    if id:
-                        drivers[driver_key].set_reservation(passenger, id[0])
-                        to_inform.append(passenger)
-                    else:
-                        order = list(filter(lambda a: a != passenger, order))
-            reservations = drivers[driver_key].get_reservations()
-            dispatch_order = [reservations[o] for o in order]
-            try:
-                traci.vehicle.dispatchTaxi(driver_key, dispatch_order)
-            except traci.exceptions.TraCIException as e:
-                ic(e)
-            drivers[driver_key].set_order(order)
-            drivers[driver_key].update_dispatched(to_inform)
+        update_driver(driver_key, drivers, picked_people, vehicle_positions)
 
 
 def update_passengers(passengers, edge_lengths):

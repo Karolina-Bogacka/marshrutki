@@ -37,7 +37,7 @@ class Organizer(Agent):
         self.send(self.id, self.to_subscribe, topic="Vehicle_subscribe")
         self.to_subscribe = {}
 
-    def choose_taxi_to_dispatch(self, destination_edge, position, passenger_id):
+    def choose_taxi(self, destination_edge, position, passenger_id):
         dest_pos = self.edge_positions[destination_edge]
         available_taxis = self.taxis["PASSIVE"] | self.taxis["DRIVING_NOT_FULL"] | self.taxis["TO_DISPATCH"]
         if available_taxis:
@@ -133,7 +133,7 @@ class Organizer(Agent):
         if "person" in message[0]:
             return self.reply_passenger_back(message)
         elif "Dispatched" in message[0]:
-            self.reply_dispatched_back(message)
+            self.reply_dispatched(message)
         elif "Picked up" in message[0]:
             return self.reply_picked_up(message)
         elif "Delivered" in message[0]:
@@ -156,7 +156,7 @@ class Organizer(Agent):
             self.taxis["DRIVING_NOT_FULL"][message[2]] = val
         self.reservations.pop(message[1], None)
 
-    def reply_dispatched_back(self, message):
+    def reply_dispatched(self, message):
         self.log_info(f"Taxi {message[1]} dispatched to {message[2]}")
         self.reservations[message[2]] = message[5]
         self.dispatched.append(message[2])
@@ -169,7 +169,7 @@ class Organizer(Agent):
 
     def reply_passenger_back(self, message):
         self.log_info(f"Find the right taxi for {message[0]}")
-        taxi, order = self.choose_taxi_to_dispatch(message[1], message[4], message[0])
+        taxi, order = self.choose_taxi(message[1], message[4], message[0])
         if taxi:
             self.log_info(f"Found taxi for {message[0]} with id of {taxi}")
             stop_edges = self.to_subscribe[taxi][0] if taxi in self.to_subscribe else {}

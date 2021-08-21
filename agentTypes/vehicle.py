@@ -106,9 +106,9 @@ class MiniBus(Agent):
         self.update_free_places(-len(passengers))
         for passenger in passengers:
             self.send(self.organizer, ["Dispatched", self.id, passenger, self.stops[passenger], self.state,
-                                       self.reservations[passenger]], handler=MiniBus.handle_dispatched_confirmation)
+                                       self.reservations[passenger]], handler=MiniBus.confirm_dispatched)
 
-    def handle_dispatched_confirmation(self, message):
+    def confirm_dispatched(self, message):
         ic("Handle dispatched")
         self.log_info("Dispatch confirmed")
 
