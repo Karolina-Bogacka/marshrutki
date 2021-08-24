@@ -27,7 +27,7 @@ class MiniBus(Agent):
     order = []
 
     def after_init(self, index, organizer, available_places=8, free_places=8):
-        ic(f"Marshrutka init {self.id}")
+        ic(f"Marshrutka init {index}")
         self.id = index
         self.state = MiniBusState.PASSIVE
         self.organizer = organizer

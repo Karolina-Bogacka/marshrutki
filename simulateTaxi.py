@@ -14,6 +14,7 @@ from osbrain import run_nameserver, run_agent
 from sumolib.miscutils import getFreeSocketPort
 
 from agentTypes.organizer import Organizer
+from agentTypes.city_organizer import CityOrganizer
 from agentTypes.passenger import Passenger, PassengerState
 from agentTypes.vehicle import MiniBus
 from utils import closest_divisors
@@ -32,7 +33,7 @@ def assign_organizer(edge, position, organizers):
 def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
     divisors = closest_divisors(org_num)
     boundaries = traci.simulation.getNetBoundary()[1]
-    difference = [int(boundaries[0] / divisors[0]), int(boundaries[1] / divisors[1])]
+    difference = [math.floor(boundaries[0] / divisors[0]), math.floor(boundaries[1] / divisors[1])]
 
     start_end = [0, 0]
     new_end = [difference[0], difference[1]]
@@ -42,13 +43,22 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
     validated_lengths = {l: lengths[l] for l in lengths if l in edges}
     edge_positions = {key: traci.simulation.convert2D(key, int(value / 2)) for key, value in lengths.items()}
 
+    city_org = run_agent(f'city-organizer', base=CityOrganizer, attributes=dict(port=port))
+    city_org.after_init(f'city-organizer')
+
     organizers = []
+    org_dict = {}
     indexes = divisors.copy()
     for o in range(org_num):
         organizer = run_agent(f'organizer-{o}', base=Organizer, attributes=dict(port=port))
         organizer.after_init(f'organizer-{o}', edge_positions=edge_positions)
-        organizer.set_borders([start_end, new_end])
+        borders = [start_end.copy(), new_end.copy()]
+        organizer.set_borders(borders)
+        org_dict[f'organizer-{o}'] = borders
         addr = organizer.bind('SYNC_PUB', alias=f'organizer-{o}', handler=Organizer.reply_back)
+        city_addr = city_org.bind('REP', alias=f'city-organizer-{o}', handler=CityOrganizer.shuffle_passenger)
+        organizer.connect(city_addr, alias=f'city-organizer-{o}')
+        organizer.set_city_addr(f'city-organizer-{o}')
         organizer.set_address(addr)
         organizers.append(organizer)
         if indexes[1] == 1:
@@ -61,6 +71,8 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
             start_end[1] = new_end[1]
             new_end[1] += difference[1]
             indexes[1] -= 1
+
+    city_org.set_organizers(org_dict)
 
     passengers = {}
     passenger_positions = {}

@@ -80,7 +80,11 @@ class Passenger(Agent):
         self.log_info('Read: "%s"' % message)
 
     def process_reply(self, message):
-        self.log_info('Organizer replied with: "%s"' % message)
+        if not message[0]:
+            self.organizer = message[1]
+            self.log_info(f'Organizer changes to {self.organizer}')
+        else:
+            self.log_info('Organizer replied with: "%s"' % message)
 
     def set_position(self, position):
         self.position2D = position

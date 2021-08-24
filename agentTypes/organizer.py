@@ -15,6 +15,7 @@ class Organizer(Agent):
     picked_or_delivered = []
     to_subscribe = {}
     dispatched = []
+    city_org = 'city-organizer'
     taxis = {"PASSIVE": {},
              "TO_DISPATCH": {},
              "DRIVING_FULL": {},
@@ -22,7 +23,7 @@ class Organizer(Agent):
              }
 
     def after_init(self, index, edge_positions):
-        ic(f"Organizer init {self.id}")
+        ic(f"Organizer init {index}")
         self.id = index
         self.edge_positions = edge_positions
 
@@ -167,16 +168,24 @@ class Organizer(Agent):
             val = self.taxis["TO_DISPATCH"].pop(message[1])
             self.taxis["DRIVING_NOT_FULL"][message[1]] = val
 
+    def set_city_addr(self, city_addr):
+        self.city_org = city_addr
+
     def reply_passenger_back(self, message):
-        self.log_info(f"Find the right taxi for {message[0]}")
-        taxi, order = self.choose_taxi(message[1], message[4], message[0])
-        if taxi:
-            self.log_info(f"Found taxi for {message[0]} with id of {taxi}")
-            stop_edges = self.to_subscribe[taxi][0] if taxi in self.to_subscribe else {}
-            stop_edges[message[0]] = message[1]
-            self.to_subscribe[taxi] = [stop_edges, order]
-            self.assigned.append(message[0])
-        return f'Received request from {message[0]} travelling to {message[1]}'
+        self.send(self.city_org, message[4])
+        reply = self.recv(self.city_org)
+        if reply == self.id:
+            self.log_info(f"Find the right taxi for {message[0]}")
+            taxi, order = self.choose_taxi(message[1], message[4], message[0])
+            if taxi:
+                self.log_info(f"Found taxi for {message[0]} with id of {taxi}")
+                stop_edges = self.to_subscribe[taxi][0] if taxi in self.to_subscribe else {}
+                stop_edges[message[0]] = message[1]
+                self.to_subscribe[taxi] = [stop_edges, order]
+                self.assigned.append(message[0])
+            return f'Received correct request from {message[0]} travelling to {message[1]}'
+        else:
+            return [False, reply]
 
     def reply_vehicle_back(self, message):
         for category in self.taxis:
