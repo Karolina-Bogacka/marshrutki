@@ -21,8 +21,8 @@ class Passenger(Agent):
     current_reservation = -1
 
     def after_init(self, index, start, position1D, position2D, destination, organizer):
-        ic(f"Passenger init {self.id}")
         self.id = index
+        ic(f"Passenger init {self.id}")
         self.state = PassengerState.PASSIVE
         self.start = start
         self.position1D = position1D

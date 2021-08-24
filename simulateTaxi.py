@@ -81,7 +81,6 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
         passenger.after_init(index=f'person-{i}', start=route[0], position1D=position,
                              position2D=traci.simulation.convert2D(route[0], position), destination=route[-1],
                              organizer=org.get_id())
-        passenger.each(5.0, Passenger.handle_state)
 
         traci.person.subscribe(f'person-{i}', [traci.tc.VAR_POSITION])
         passengers[f'person-{i}'] = passenger
@@ -194,6 +193,9 @@ def simulate(pass_num, veh_num, org_num=1, generated_routes='config-smaller-berl
 
     organizers, passengers, vehicles, edges = simulation_setup(pass_num, veh_num, org_num, port, generated_routes)
 
+    for passenger in passengers:
+        passengers[passenger].each(5.0, Passenger.handle_state)
+
     step = 0
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
@@ -223,4 +225,4 @@ if __name__ == '__main__':
         sys.path.append(tools)
     else:
         sys.exit("please declare environment variable 'SUMO_HOME'")
-    simulate(args.passengers, args.vehicles, 1)
+    simulate(args.passengers, args.vehicles, 2)
