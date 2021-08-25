@@ -17,16 +17,15 @@ from agentTypes.organizer import Organizer
 from agentTypes.city_organizer import CityOrganizer
 from agentTypes.passenger import Passenger, PassengerState
 from agentTypes.vehicle import MiniBus
-from utils import closest_divisors
+from utils import closest_divisors, check_boundaries
 
 
 def assign_organizer(edge, position, organizers):
     pos = traci.simulation.convert2D(edge, position)
     for org in organizers:
         borders = org.get_borders()
-        if pos[0] >= borders[0][0] and pos[1] >= borders[0][1]:
-            if pos[0] < borders[1][0] and pos[1] < borders[1][1]:
-                return org
+        if check_boundaries(pos, borders):
+            return org
     return None
 
 
@@ -85,11 +84,13 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
         passenger = run_agent(f'person-{i}', base=Passenger)
 
         org = assign_organizer(route[0], position, organizers)
-        address = org.get_address()
-        passenger.connect(address, alias=org.get_id(),
+        for o in organizers:
+            address = o.get_address()
+            passenger.connect(address, alias=o.get_id(),
                           handler={'Main': Passenger.read_subscription, 'Passenger_dispatched':
                               Passenger.update_dispatched, 'Passenger_assigned': Passenger.update_assigned,
                                    "Passenger_picked": Passenger.update_reservation})
+
         passenger.after_init(index=f'person-{i}', start=route[0], position1D=position,
                              position2D=traci.simulation.convert2D(route[0], position), destination=route[-1],
                              organizer=org.get_id())
@@ -107,7 +108,7 @@ def simulation_setup(pass_num, veh_num, org_num, port, generated_routes):
         for i in range(veh_num):
             vehicle = run_agent(f'vehicle-{index}', base=MiniBus)
             vehicle.after_init(f'vehicle-{index}', org.get_id())
-            traci.vehicle.add(f'vehicle-{index}', generated[i], typeID="marshrutka", line="taxi")
+            traci.vehicle.add(f'vehicle-{index}', generated[index], typeID="marshrutka", line="taxi")
             address = org.get_address()
             vehicle.connect(address, alias=org.get_id(),
                             handler={"Main": MiniBus.read_subscription, "Vehicle_subscribe": MiniBus.read_subscription})
@@ -200,7 +201,7 @@ def simulate(pass_num, veh_num, org_num=1, generated_routes='config-smaller-berl
     sumoBinary = "sumo-gui"
     sumoCmd = [sumoBinary, "-c",
                r"config-smaller-berlin/osm.sumocfg", "--num-clients", "1", "--device.taxi.dispatch-algorithm", "traci",
-               "--device.taxi.idle-algorithm", "randomCircling", "--device.rerouting.explicit", "marshrutka"]
+               "--device.taxi.idle-algorithm", "stop", "--device.rerouting.explicit", "marshrutka"]
     traci.start(sumoCmd, port=port)
 
     organizers, passengers, vehicles, edges = simulation_setup(pass_num, veh_num, org_num, port, generated_routes)
@@ -226,8 +227,10 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('vehicles', type=int,
-                        help='number of vehicles for the simulation')
+                        help='number of vehicles for the simulation (for each organizer)')
     parser.add_argument('passengers', type=int,
+                        help='number of passengers for the whole simulation')
+    parser.add_argument('organizers', type=int,
                         help='number of passengers for the simulation')
 
     # parse the arguments
@@ -237,4 +240,4 @@ if __name__ == '__main__':
         sys.path.append(tools)
     else:
         sys.exit("please declare environment variable 'SUMO_HOME'")
-    simulate(args.passengers, args.vehicles, 2)
+    simulate(args.passengers, args.vehicles, args.organizers)

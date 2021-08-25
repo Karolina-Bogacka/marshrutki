@@ -3,7 +3,7 @@ from osbrain import Agent
 from scipy.spatial import distance
 
 from agentTypes.vehicle import MiniBusState
-from utils import combined_distance
+from utils import combined_distance, check_boundaries
 
 
 class Organizer(Agent):
@@ -172,20 +172,20 @@ class Organizer(Agent):
         self.city_org = city_addr
 
     def reply_passenger_back(self, message):
-        self.send(self.city_org, message[4])
-        reply = self.recv(self.city_org)
-        if reply == self.id:
-            self.log_info(f"Find the right taxi for {message[0]}")
-            taxi, order = self.choose_taxi(message[1], message[4], message[0])
-            if taxi:
-                self.log_info(f"Found taxi for {message[0]} with id of {taxi}")
-                stop_edges = self.to_subscribe[taxi][0] if taxi in self.to_subscribe else {}
-                stop_edges[message[0]] = message[1]
-                self.to_subscribe[taxi] = [stop_edges, order]
-                self.assigned.append(message[0])
-            return f'Received correct request from {message[0]} travelling to {message[1]}'
-        else:
-            return [False, reply]
+        if not check_boundaries(message[4], self.borders):
+            self.send(self.city_org, [message[4], message[0], self.id])
+            reply = self.recv(self.city_org)
+            if reply != self.id:
+                return [False, reply]
+        self.log_info(f"Find the right taxi for {message[0]}")
+        taxi, order = self.choose_taxi(message[1], message[4], message[0])
+        if taxi:
+            self.log_info(f"Found taxi for {message[0]} with id of {taxi}")
+            stop_edges = self.to_subscribe[taxi][0] if taxi in self.to_subscribe else {}
+            stop_edges[message[0]] = message[1]
+            self.to_subscribe[taxi] = [stop_edges, order]
+            self.assigned.append(message[0])
+        return f'Received correct request from {message[0]} travelling to {message[1]}'
 
     def reply_vehicle_back(self, message):
         for category in self.taxis:

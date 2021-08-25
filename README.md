@@ -2,7 +2,7 @@ To run this project, first install SUMO (Simulation Of Urban Mobility) with sumo
 SUMO_HOME. To activate the local environment on Windows, run .\agent-env\Scripts\activate.
 
 Then, run simulateTaxi.py from directory marshrutki with two numerical arguments denoting the number of 
-passengers and vehicles in the simulation. To start the simulation itself, you have to click on the 
+passengers, organizers and vehicles in the simulation. To start the simulation itself, you have to click on the 
 green arrow in the later popped out window.
 
 Marshrutki (multi-person taxis) are marked as red in the simulation. To track and observe one, choose a car

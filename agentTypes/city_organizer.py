@@ -1,6 +1,8 @@
 from icecream import ic
 from osbrain import Agent
 
+from utils import check_boundaries
+
 
 class CityOrganizer(Agent):
 
@@ -19,9 +21,8 @@ class CityOrganizer(Agent):
     def set_organizers(self, organizers):
         self.organizers = organizers
 
-    def shuffle_passenger(self, pos):
+    def shuffle_passenger(self, msg):
         for organizer in self.organizers:
-            if pos[0] >= self.organizers[organizer][0][0] and pos[1] >= self.organizers[organizer][0][1]:
-                if pos[0] < self.organizers[organizer][1][0] and pos[1] < self.organizers[organizer][1][1]:
-                    self.log_info(f"Received request from position {pos} assigned now to {organizer}")
-                    return organizer
+            if check_boundaries(msg[0], self.organizers[organizer]):
+                self.log_info(f"Received request from passenger {msg[1]} from {msg[2]} assigned now to {organizer}")
+                return organizer
